@@ -14,11 +14,25 @@ Our aim on this course is to create an online store software for JavaScript game
 
 Main features will include at least user authentication, global high score lists and server-side game saving. For developers we will implement functionalities such as sales statistics and a comprehensive UI for managing their games.
 
-We want the system to be sufficiently secure and able to withstand attempts at malicious usage, as well as flexible and somewhat modular. We also plan to make use of some external APIs and are in general looking to get an excellent grade.
+We want the system to be sufficiently secure and able to withstand attempts at malicious usage, as well as flexible and somewhat modular. If there is time, we also plan to make use of some external APIs (such as Google login), and are in general looking to get an excellent grade.
 
 
 ### 3. Implementation plan
 
+(games are HTML files displayed within an iframe)
+
+Using the technologies taught on this course, we shall create a web service that provides the following pages:
+
+Front page, with login at top bar (newest game list, (widgets))
+Registration page (username, password, confirm password, email)
+User page (list of games, profile info, user settings, etc)
+Developer page (list of games made (both public and non-published), statistics for each game (spoiler-type button), adding a game)
+Game page (buy/play button, high score list)
+  -> transforms to gameplay page when clicked play
+  -> redirect to purchase page when not owned by user
+
+
+  
 jQuery, HTML/CSS/JS
 
 etusivu, jossa esill‰ myynniss‰ olevia pelej‰ (n‰ist‰ n‰kyviss‰ kenties nimi, 1 screenshot ja teksti‰, jotka kaikki ovat m‰‰ritelt‰viss‰ developerin sivulla)
