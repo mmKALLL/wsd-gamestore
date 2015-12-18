@@ -51,7 +51,7 @@ Developerin sivulla voi tarkastella statistiikkoja (eri paneelissa kuin pelit) j
 
 Our team members have agreed to spend at least one day developing the software every two weeks, or every week if possible. We are using Skype as our main communication channel during the project.
 
-Regarding development, we are going to employ individual branches and use Git pull requests or pair programming in order to review all code that goes into the master branch. Apart from parts where the code is self-descriptive, all functions and complex structures will be commented. Some unit tests will be used, especially for functional-style JavaScript. These practices will result in a high degree of quality in the code and make it easier to collaborate.
+Regarding development, we are going to employ individual branches and use Git pull requests or pair programming in order to review all code that goes into the master branch. Apart from parts where the code is self-descriptive, all functions and complex structures will be commented. Some unit tests will be used, especially for JavaScript functions. These practices will result in a high degree of quality in the code and make it easier to collaborate.
 
 
 
