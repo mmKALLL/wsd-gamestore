@@ -14,52 +14,41 @@ Our aim on this course is to create an online store software for JavaScript game
 
 Main features will include at least user authentication, global high score lists and server-side game saving. For developers we will implement functionalities such as sales statistics and a comprehensive UI for managing their games.
 
-We want the system to be sufficiently secure and able to withstand attempts at malicious usage, as well as flexible and somewhat modular. If there is time, we also plan to make use of some external APIs (such as Google login), and are in general looking to get an excellent grade.
+We want the system to be sufficiently secure and able to withstand attempts at malicious usage, as well as flexible and somewhat modular. If there is time, we also plan to make use of some external APIs (such as Google login), and are in general looking to get an excellent grade. In other words, almost all functionality detailed in the Project Description will be implemented.
 
 
 ### 3. Implementation plan
 
-(games are HTML files displayed within an iframe)
+We will be using the technologies taught on this course; Django for managing the backend, and HTML/CSS/JS for handling the user's view. The games will be played in an iframe right within our site, but hosted on the developers' servers. The term "user" will be used for both types of registered users - the players and the developers - and a player will be able to upgrade their account and gain access to the developer tools at any time.
 
-Using the technologies taught on this course, we shall create a web service that provides the following pages:
+All of the pages in our service have the same header and footer. The header has our logo, with a link to the front page, and fields for logging in, while the footer will include at least some kind of disclaimer, our contact information, and an introduction page for becoming a developer on the site. An unregistered user trying to access features only available for registered users will be asked to log in.
 
-Front page, with login at top bar (newest game list, (widgets)), disclaimer etc. at bottom bar
-Registration page (username, password, confirm password, email)
-User page (list of games, profile info, user settings, etc)
-Developer page (list of games made (both public and non-published), statistics and settings for each game (spoiler-type button), adding a game)
-Game page (buy/play button, high score list)
-  -> transforms to gameplay page when clicked play
-  -> redirect to purchase page when not owned by user
-Search page (search for games by name)
+The service should include at least the following pages and functionality:
+
+* Front page, which will feature the latest releases and allow the users to navigate our site.
+* Registration page. The required fields will include at least a username, password, password confirm, and email address.
+* User page, which has the list of a registered user's owned games, profile info, and settings.
+* Developer page, which has the list of a registered user's developed games - both public and those which are not yet published - as well as statistics and settings for each game. A developer page also has the necessary tools for adding a new game to the site.
+* Game page, where the details (name, screenshot and description) of a single game are shown, and enables the user to either purchase the game or play it if they already own it. It will also have a list of high scores for that game as well as display the user's best score.
+* A game list or search page, where users will be able to look up games by their name.
 
 
+Since the server side architecture seems difficult to change afterwards, we should consider that as an architecturally significant requirement and model as much of it as possible on a general level before starting development. Considering that, the following should include most of the Django models needed to support all of these features:
 
-  
-jQuery, HTML/CSS/JS
+* Users; we need to store information of users on a server, so that we can differentiate between them and know which games they have purchased. We plan on this model including developers by having a True/False attribute for whether the user has access to our developer pages.
+* Games; this model has the information of a single game and any necessary references to other models.
+* Owned games; for each user, we have a list of games that they have purchased, and for each owned game a list of saved game states.
+* Created games; for each developer, we have a list of games that they have added to the service.
+* Highscores; for each game, include a list of each user's best score (if they have played that game).
 
-etusivu, jossa esill‰ myynniss‰ olevia pelej‰ (n‰ist‰ n‰kyviss‰ kenties nimi, 1 screenshot ja teksti‰, jotka kaikki ovat m‰‰ritelt‰viss‰ developerin sivulla)
-mahdollisuus kirjautua sis‰‰n (Google login? Ei ehk‰ commitata t‰h‰n koska ei viel‰ tietoa miten hankalaa voi olla) jolloin voi siirty‰ omalle sivulle (profiilisivu)
-jokaisella myynniss‰ olevalla pelill‰ joka on listattu julkiseksi (Pelin voi lis‰t‰ sivuille ilman, ett‰ se on pakko laittaa heti myyntiin! Mielest‰ni t‰rke‰‰) on oma sivunsa
-Pelej‰ voi etsi‰ tietokannasta (toteutetaan oma search engine? :D joka palauttaa listan peleist‰, jotka sis‰ltiv‰t jonkun stringin? onnistuuko?)
-K‰ytt‰j‰n profiilisivulla n‰kyy h‰nen omistamansa pelit, joista p‰‰see myˆs linkin kautta pelin sivulle
-Pelin sivulla voi joko ostaa pelin, tai jos omistaa sen jo, niin siirty‰ pelaamaan sit‰
-Developerin sivulla voi tarkastella statistiikkoja (eri paneelissa kuin pelit) ja lis‰t‰/editoida/poistaa pelej‰ ja niiden tietoja (screenshot, description, ja se URL mist‰ peli haetaan!)
 
 ### 4. Project practices and schedule
-
-//
 
 Our team members have agreed to spend at least one day developing the software every two weeks, or every week if possible. We are using Skype as our main communication channel during the project.
 
 Regarding development, we are going to employ individual branches and use Git pull requests or pair programming in order to review all code that goes into the master branch. Apart from parts where the code is self-descriptive, all functions and complex structures will be commented. Some unit tests will be used, especially for functional-style JavaScript. These practices will result in a high degree of quality in the code and make it easier to collaborate.
 
-
-
-
-
-Schedule
-
-Roughly, 2 weeks for backend, 2 weeks for frontend, 3 weeks for JS and integration, 1 week for finishing up
+Roughly speaking, we have allocated two weeks for developing most of the server side functionality, three weeks for the client side functionality, one week for integration and testing, and one week for additional features, finishing up, and deployment. Of course, this plan might require some adjustment as we go, but having a general guideline will be very beneficial for estimating the workload and our pace of development.
 
 
 ### 5. Testing
