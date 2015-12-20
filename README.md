@@ -7,7 +7,7 @@ Quagmire Zone Underground Project Plan
 429186 Atte Jaantila
 355496 Jussi Hirvonen
 
-
+  
 ### 2. Goal
 
 Our aim on this course is to create an online store software for JavaScript games, which will allow developers to distribute their software and receive payments, and players to purchase and play games right in their browser.
@@ -16,7 +16,7 @@ Main features will include at least user authentication, global high score lists
 
 We want the system to be sufficiently secure and able to withstand attempts at malicious usage, as well as flexible and somewhat modular. If there is time, we also plan to make use of some external APIs (such as Google login), and are in general looking to get an excellent grade. In other words, almost all functionality detailed in the Project Description will be implemented.
 
-
+  
 ### 3. Implementation plan
 
 We will be using the technologies taught on this course; Django for managing the backend, and HTML/CSS/JS for handling the user's view. The games will be played in an iframe right within our site, but hosted on the developers' servers. The term "user" will be used for both types of registered users - the players and the developers - and a player will be able to upgrade their account and gain access to the developer tools at any time.
@@ -32,7 +32,7 @@ The service should include at least the following pages and functionality:
 * Game page, where the details (name, screenshot and description) of a single game are shown, and enables the user to either purchase the game or play it if they already own it. It will also have a list of high scores for that game as well as display the user's best score.
 * A game list or search page, where users will be able to look up games by their name.
 
-
+  
 Since the server side architecture seems difficult to change afterwards, we should consider that as an architecturally significant requirement and model as much of it as possible on a general level before starting development. Considering that, the following should include most of the Django models needed to support all of these features:
 
 * Users; we need to store information of users on a server, so that we can differentiate between them and know which games they have purchased. We plan on this model including developers by having a True/False attribute for whether the user has access to our developer pages.
@@ -41,7 +41,7 @@ Since the server side architecture seems difficult to change afterwards, we shou
 * Created games; for each developer, we have a list of games that they have added to the service.
 * Highscores; for each game, include a list of each user's best score (if they have played that game).
 
-
+  
 ### 4. Project practices and schedule
 
 Our team members have agreed to spend at least one day developing the software every two weeks, or every week if possible. We are using Skype as our main communication channel during the project.
@@ -50,7 +50,7 @@ Regarding development, we are going to employ individual branches and use Git pu
 
 Roughly speaking, we have allocated two weeks for developing most of the server side functionality, three weeks for the client side functionality, one week for integration and testing, and one week for additional features, finishing up, and deployment. Of course, this plan might require some adjustment as we go, but having a general guideline will be very beneficial for estimating the workload and our pace of development.
 
-
+  
 ### 5. Testing
 
 To ensure that the software is secure and working as intended, we will write some automatic unit tests for the main JavaScript functions we use. This way we can be certain that the basic functionality won't be broken by updates to the source code. All new features shall be peer reviewed before committing to uphold awareness within the team and avoid mistakes due to carelessness and tunnel vision. We obviously also plan to test the software manually excessively.
