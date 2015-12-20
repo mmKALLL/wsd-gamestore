@@ -28,8 +28,8 @@ The service should include at least the following pages and functionality:
 * Front page, which will feature the latest releases and allow the users to navigate our site.
 * Registration page. The required fields will include at least a username, password, password confirm, and email address.
 * User page, which has the list of a registered user's owned games, profile info, and settings.
-* Developer page, which has the list of a registered user's developed games - both public and those which are not yet published - as well as statistics and settings for each game. A developer page also has the necessary tools for adding a new game to the site.
-* Game page, where the details (name, screenshot and description) of a single game are shown, and enables the user to either purchase the game or play it if they already own it. It will also have a list of high scores for that game as well as display the user's best score.
+* Developer page, which has the list of a registered user's developed games - both public and those not yet published - as well as statistics and settings for each game. A developer page also has the necessary tools for adding a new game to the site.
+* Game page, where the details (name, screenshot and description) of a single game are shown, and the user can either purchase the game or play it if they already own it. It will also have a list of high scores for that game as well as display the user's best score.
 * A game list or search page, where users will be able to look up games by their name.
 
   
