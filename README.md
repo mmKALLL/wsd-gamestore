@@ -59,6 +59,8 @@ Regarding development, we are going to employ individual branches and use Git pu
 
 Schedule
 
+Roughly, 2 weeks for backend, 2 weeks for frontend, 3 weeks for JS and integration, 1 week for finishing up
+
 
 ### 5. Testing
 
