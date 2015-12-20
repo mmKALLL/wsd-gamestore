@@ -53,4 +53,6 @@ Roughly speaking, we have allocated two weeks for developing most of the server 
 
 ### 5. Testing
 
+To ensure that the software is secure and working as intended, we will write some automatic unit tests for the main JavaScript functions we use. This way we can be certain that the basic functionality won't be broken by updates to the source code. All new features shall be peer reviewed before committing to uphold awareness within the team and avoid mistakes due to carelessness and tunnel vision. We obviously also plan to test the software manually excessively.
 
+Regarding security, it is important that we at least validate all incoming data from the users and make sure that it's in the correct format. This will prevent basic script injections from becoming a problem. All in all, we are going to pay close attention to the reliability of the system.
