@@ -18,5 +18,10 @@ from django.conf.urls import url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^$', views.index),
+    url(r'^register/', views.register),
+    url(r'^user/([0-9a-zA-Z]+)/', views.userpage),
+    url(r'^developer/([0-9a-zA-Z]+)/', views.developerpage),
+    url(r'^game/([0-9]+)/', views.gameView),
+    url(r'^gamelist/', views.gameList)
 ]
