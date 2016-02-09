@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from gamestore import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^register/', views.register),
-    url(r'^user/([0-9a-zA-Z]+)/', views.userpage),
-    url(r'^developer/([0-9a-zA-Z]+)/', views.developerpage),
-    url(r'^game/([0-9]+)/', views.gameView),
-    url(r'^gamelist/', views.gameList)
+    url(r'^register$', views.register),
+    url(r'^user/([0-9a-zA-Z]+)$', views.userpage),
+    url(r'^developer/([0-9a-zA-Z]+)$', views.developerpage),
+    url(r'^game/([0-9]+)$', views.gameView), # TODO: Change number to the name of the game
+    url(r'^gamelist$', views.gameList)
 ]

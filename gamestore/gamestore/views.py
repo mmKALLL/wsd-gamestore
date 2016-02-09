@@ -1,18 +1,19 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from gamestore import templates
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
 
 def register(request):
-	return render(request, "register.html", {})
+	return render(request, 'register.html', {})
 
 def userpage(request, user_id):
 	if request.user.is_authenticated():
 		user = get_object_or_404(User, pk=user_id)
 		games = get_list_or_404() # TODO: Get list of games for user
 		context = {'user': user, 'games': games}
-		return render(request, "user.html", context)
+		return render(request, 'user.html', context)
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
