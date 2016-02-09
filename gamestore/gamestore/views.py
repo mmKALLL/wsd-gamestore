@@ -1,6 +1,5 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
-from gamestore import templates
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
