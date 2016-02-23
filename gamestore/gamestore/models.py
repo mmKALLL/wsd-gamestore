@@ -4,7 +4,7 @@ from django.db import models
 
 class Game(models.Model):
     name = models.CharField(max_length=50)
-    URL = models.URLfield(max_length=150)
+    URL = models.URLField(max_length=150)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
     developer = models.ForeignKey(
         'User', 
