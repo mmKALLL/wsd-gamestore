@@ -1,5 +1,6 @@
-from django.http import HttpResponse, Http404, Http403
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from django.core.exceptions import PermissionDenied
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
@@ -15,7 +16,7 @@ def userPage(request, user_id):
 			context = {'user': user, 'games': games}
 			return render(request, 'user.html', context)
 		else:
-			return Http403
+			raise PermissionDenied
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
@@ -29,7 +30,7 @@ def developerPage(request, user_id):
 			context = {'user': developer, 'games': games}
 			return render(request, 'developer_page.html', context)
 		else:
-			return Http403
+			raise PermissionDenied
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
