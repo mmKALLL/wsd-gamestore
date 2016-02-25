@@ -16,7 +16,7 @@ def register(request):
 			return redirect('index')
 	else:
 		user_form = UserForm()
-	return render(request, 'register.html', {'form', user_form})
+	return render(request, 'register.html', {'form': user_form})
 
 def userPage(request, user_id):
 	if request.user.is_authenticated():
