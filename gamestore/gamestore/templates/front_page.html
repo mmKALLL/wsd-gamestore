@@ -1,1 +1,28 @@
-front_page.html
+{% load staticfiles %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Quagmire Zone Underground</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nosifer">
+        <link rel="stylesheet" type="text/css" href="{% static 'quagmire.css' %}">
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="title"><a href="/">Quagmire Zone<br>Underground</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><button class="btn btn-default">Login</button></li>
+                    <li><a href="/register" class="btn btn-default">Register</a></li>
+                </ul>
+            </nav>
+        </header>
+        <div>
+            Game<br>Game<br>Game<br>Game
+        </div>
+        <footer>&copy; Quagmire Zone Underground, 2016</footer>
+    </body>
+</html>
