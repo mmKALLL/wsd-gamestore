@@ -1,12 +1,9 @@
 from django.db import models
 
 class UserExtension(models.Model):
-    user = models.OneToOneField(
-        'User', 
-        on_delete=models.CASCADE, 
-        parent_link=False)
+    user = models.OneToOneField('User', on_delete=models.CASCADE, parent_link=False)
     isDeveloper = models.BooleanField(default=False)
-    ownedGames = models.ManyToManyField('GamesOwned')
+    ownedGames = models.ManyToManyField(GamesOwned)
     
 
 class Game(models.Model):
