@@ -1,18 +1,28 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
+from gamestore import forms
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
 
 def register(request):
-	return render(request, 'register.html', {})
+	if request.method == 'POST':
+		user_form = UserForm(data=request.POST)
+		if user_form.is_valid():
+			user = user_form.save()
+			user.set_password(user.password)
+			user.save()
+			return redirect('index')
+	else:
+		user_form = UserForm()
+	return render(request, 'register.html', {'form', user_form})
 
 def userPage(request, user_id):
 	if request.user.is_authenticated():
 		if request.user.id is user_id:
 			user = get_object_or_404(User, pk=user_id)
-			games = get_list_or_404() # TODO: Get list of games for user
+			games = get_list_or_404(GamesOwned, user=user)
 			context = {'user': user, 'games': games}
 			return render(request, 'user.html', context)
 		else:
@@ -24,11 +34,13 @@ def userPage(request, user_id):
 def developerPage(request, user_id):
 	if request.user.is_authenticated():
 		if request.user.id is user_id:
-			# TODO: Check if user is dev
-			developer = get_object_or_404(User, pk=user_id)
-			games = get_list_or_404()  # TODO: Get list of games that the developer has made   
-			context = {'user': developer, 'games': games}
-			return render(request, 'developer_page.html', context)
+			if request.user.userextension.isDeveloper == True:
+				developer = get_object_or_404(User, pk=user_id)
+				games = get_list_or_404(Game, developer=developer)  
+				context = {'user': developer, 'games': games}
+				return render(request, 'developer_page.html', context)
+			else:
+				return redirect('userPage', user_id=request.user.id)
 		else:
 			raise PermissionDenied
 	else:

@@ -2,7 +2,12 @@
 	Quagmire Zone Underground
 </header>
 <div>
+<form method='POST' action='/save_user/'>
+    {% csrf_token %}
 	registration page placeholder
+	{{form.as_p}}
+	<input type ='submit' value='Submit'
+</form>
 </div>
 <footer>
 	&copy; Quagmire Zone Underground, 2016
