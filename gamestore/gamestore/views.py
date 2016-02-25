@@ -1,7 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
-from gamestore import forms
+from gamestore.forms import UserForm
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
