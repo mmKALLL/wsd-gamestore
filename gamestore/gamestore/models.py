@@ -1,20 +1,17 @@
 from django.db import models
 
-# TODO: Users should have a ManyToManyField with GamesOwned !!!
-
 class UserExtension(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, parent_link=False)
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField(GamesOwned)
-    
     
 
 class Game(models.Model):
     name = models.CharField(max_length=80)
     URL = models.URLField(max_length=150, unique=True)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
-    image = ()
-    image2 = ImageField()
+    image = models.URLField(blank=True)
+    image2 = models.URLField(blank=True)
     developer = models.ForeignKey(
         'User', 
         on_delete=models.SET_NULL, 
