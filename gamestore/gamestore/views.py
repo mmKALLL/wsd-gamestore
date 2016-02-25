@@ -12,7 +12,7 @@ def userPage(request, user_id):
 	if request.user.is_authenticated():
 		if request.user.id is user_id:
 			user = get_object_or_404(User, pk=user_id)
-			games = get_list_or_404() # TODO: Get list of games for user
+			games = get_list_or_404(GamesOwned, user=user)
 			context = {'user': user, 'games': games}
 			return render(request, 'user.html', context)
 		else:
@@ -26,7 +26,7 @@ def developerPage(request, user_id):
 		if request.user.id is user_id:
 			if request.user.userextension.isDeveloper == True:
 				developer = get_object_or_404(User, pk=user_id)
-				games = get_list_or_404()  # TODO: Get list of games that the developer has made   
+				games = get_list_or_404(Game, developer=developer)  
 				context = {'user': developer, 'games': games}
 				return render(request, 'developer_page.html', context)
 			else:
