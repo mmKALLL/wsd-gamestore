@@ -1,12 +1,22 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
+from gamestore import forms
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
 
 def register(request):
-	return render(request, 'register.html', {})
+	if request.method == 'POST':
+		user_form = UserForm(data=request.POST)
+		if user_form.is_valid():
+			user = user_form.save()
+			user.set_password(user.password)
+			user.save()
+			return redirect('index')
+	else:
+		user_form = UserForm()
+	return render(request, 'register.html', {'form', user_form})
 
 def userPage(request, user_id):
 	if request.user.is_authenticated():
