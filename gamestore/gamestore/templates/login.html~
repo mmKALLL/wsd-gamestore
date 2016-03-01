@@ -1,0 +1,16 @@
+{% load staticfiles %}
+<header font-size="40px">
+	Quagmire Zone Underground
+</header>
+<div>
+    {% block login %}
+        <form method="POST" action="/login">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Login">
+        </form>
+    {% endblock %}
+</div>
+<footer>
+	&copy; Quagmire Zone Underground, 2016
+</footer>

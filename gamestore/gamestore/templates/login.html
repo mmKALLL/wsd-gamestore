@@ -1,16 +1,29 @@
 {% load staticfiles %}
-<header font-size="40px">
-	Quagmire Zone Underground
-</header>
-<div>
-    {% block login %}
-        <form method="POST" action="/login">
-            {% csrf_token %}
-            {{form.as_p}}
-            <input type="submit" value="Login">
-        </form>
-    {% endblock %}
-</div>
-<footer>
-	&copy; Quagmire Zone Underground, 2016
-</footer>
+<html>
+    <!-- The registration page, where users can create new accounts. -->
+    <head>
+        <meta charset="UTF-8">
+        <title>Quagmire Zone Underground</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nosifer">
+        <link rel="stylesheet" type="text/css" href="{% static 'quagmire.css' %}">
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    </head>
+    <body>
+        <header font-size="40px">
+            Quagmire Zone Underground
+        </header>
+        <div>
+            {% block login %}
+                <form method="POST" action="/login">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <input type="submit" value="Login">
+                </form>
+            {% endblock %}
+        </div>
+        <footer>
+            &copy; Quagmire Zone Underground, 2016
+        </footer>
+    </body>
+</html>
