@@ -55,9 +55,6 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'gamestore.urls'
 
-# Required for authorization
-TEMPLATE_LOADERS = 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
