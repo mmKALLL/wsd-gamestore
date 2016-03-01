@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^game/([0-9]+)/play$', views.gamePlayView),
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test),
+    # url(r'^admin/', include(admin.site.urls, namespace="admin"))
 ]

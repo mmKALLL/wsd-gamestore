@@ -59,19 +59,13 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['gamestore/templates'],
-        #'APP_DIRS': True,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            ],
-            
-            # Required for authorization.
-            'loaders': [
-                'django.template.loaders.filesystem.Loader', 
-                'django.template.loaders.app_directories.Loader'
             ],
         },
     },
@@ -134,9 +128,8 @@ STATIC_ROOT = '/quagmire/static/'
 
 # Redirecting URLs (login, auth, payment)
 
-LOGIN_REDIRECT_URL = '/'  # TODO: This might have to be '/' instead.
+LOGIN_REDIRECT_URL = '/'
 
-# LOGOUT_URL = '/'
 
 
 
