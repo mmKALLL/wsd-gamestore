@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '*=e@20kz0ad@hu7d&&kzow%8*r=@cwyfiq_cf=dih0%4$7y7e+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost', # TODO: Add Heroku when we have it
@@ -54,6 +54,10 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'gamestore.urls'
+
+# Required for authorization
+TEMPLATE_LOADERS = ['django.template.loaders.app_directories.Loader', 
+                    'django.template.loaders.filesystem.Loader']
 
 TEMPLATES = [
     {
