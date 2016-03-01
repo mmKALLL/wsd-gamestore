@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '*=e@20kz0ad@hu7d&&kzow%8*r=@cwyfiq_cf=dih0%4$7y7e+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost', # TODO: Add Heroku when we have it
@@ -59,7 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['gamestore/templates'],
-        'APP_DIRS': True,
+        #'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -136,7 +136,7 @@ STATIC_ROOT = '/quagmire/static/'
 
 LOGIN_REDIRECT_URL = '/'  # TODO: This might have to be '/' instead.
 
-LOGOUT_URL = '/'
+# LOGOUT_URL = '/'
 
 
 

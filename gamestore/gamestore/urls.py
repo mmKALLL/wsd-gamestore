@@ -14,19 +14,21 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from gamestore import views
+
 
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^register$', views.register),
     url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
-    url(r'^logout$', 'django.contrib.auth.views.logout'),
+    url(r'^logout$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^user/([0-9a-zA-Z]+)$', views.userPage),
     url(r'^developer/([0-9a-zA-Z]+)$', views.developerPage),
     url(r'^game/([0-9]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^game/([0-9]+)/play$', views.gamePlayView),
     url(r'^gamelist$', views.gameList),
-    url(r'^test$', views.test)
+    url(r'^test$', views.test),
+    # url(r'^admin/', include(admin.site.urls, namespace="admin"))
 ]
