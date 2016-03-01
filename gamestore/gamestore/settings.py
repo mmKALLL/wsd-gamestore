@@ -128,9 +128,9 @@ STATIC_ROOT = '/quagmire/static/'
 
 # Redirecting URLs (login, auth, payment)
 
-LOGIN_REDIRECT_URL = ''  # TODO: This might have to be '/' instead.
+LOGIN_REDIRECT_URL = '/'  # TODO: This might have to be '/' instead.
 
-LOGOUT_URL = ''
+LOGOUT_URL = '/'
 
 
 
