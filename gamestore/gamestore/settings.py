@@ -56,8 +56,7 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'gamestore.urls'
 
 # Required for authorization
-TEMPLATE_LOADERS = ['django.template.loaders.app_directories.Loader', 
-                    'django.template.loaders.filesystem.Loader']
+TEMPLATE_LOADERS = 
 
 TEMPLATES = [
     {
@@ -70,6 +69,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+            ],
+            
+            # Required for authorization.
+            'loaders': [
+                'django.template.loaders.filesystem.Loader', 
+                'django.template.loaders.app_directories.Loader'
             ],
         },
     },
