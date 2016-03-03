@@ -43,7 +43,13 @@
         </header>
         <div class="container">
             <div class="row">
-                Game list
+                {% for game in sorted(games) %}
+                    <div class="generic">
+                        <p>
+                             {{game.image}} <a href="/game/{{game.id}}" >{{ game.name }}</a> Developed by: {{game.developer}} {{game.price}}€
+                        </p>
+                    </div>
+                {% endfor %}    
             </div>
         </div>
         <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
