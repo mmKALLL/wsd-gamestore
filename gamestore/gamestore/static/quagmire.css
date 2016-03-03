@@ -2,14 +2,14 @@
 body {
 	margin: 0;
 	height: 100%;
-	background: #203040;
-	color: white;
+	background: #1B2838;
+	color: #FFFFFF;
 	font-family: "Verdana";
 }
 
 header {
 	width: 100%;
-	background: black;
+	background: #000000;
 	border-bottom: 1px dashed gray;
 }
 
@@ -32,12 +32,21 @@ header {
 	color: #FFFF00;
 }
 
-.nav > li > a:hover {
-    background-color: transparent;
+.title a:hover {
+	background-color: transparent !important;
 }
 
-.nav > li > a:focus {
-    background-color: transparent;
+.title a:focus {
+	background-color: transparent !important;
+}
+
+@media (min-width: 768px) {
+
+	.nav > li > a.btn {
+		min-width: 90px;
+		margin-right: 12px;
+	}
+
 }
 
 /*.center {
@@ -47,9 +56,15 @@ header {
     transform: translate(0, -50%);
 }*/
 
+.game-frontpage {
+	background-color: #273B52;
+	border: 1px solid #337AB7;
+	margin: 18px 0;
+	padding: 12px;
+}
+
 footer {
 	width: 100%;
-	position: absolute;
-	bottom: 0;
 	text-align: center;
+	margin: 6px 0;
 }
