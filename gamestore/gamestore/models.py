@@ -15,6 +15,7 @@ class Game(models.Model):
     URL = models.URLField(max_length=150, unique=True)
     gameSource = models.URLField(max_length=300, unique=True, blank=True)
     isPublic = models.BooleanField(default=False)
+    genre = models.CharField(max_length=80)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
     image = models.URLField(blank=True)
     image2 = models.URLField(blank=True)

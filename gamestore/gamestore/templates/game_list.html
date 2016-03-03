@@ -43,7 +43,18 @@
         </header>
         <div class="container">
             <div class="row">
-                Game list
+                {% for genre in sorted(genres) %}
+                    <div class="generic">
+                        <h3> {{genre}}: </h3> 
+                            {% for game in sorted(games) %}
+                                {% ifequal game.genre genre %}
+                                    <p>
+                                        {{game.image}} <a href="/game/{{game.id}}" >{{ game.name }}</a> Developed by: {{game.developer}} {{game.price}}€
+                                    </p>
+                                {% endif %}
+                            {% endfor %}
+                    </div>
+                {% endfor %}    
             </div>
         </div>
         <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
