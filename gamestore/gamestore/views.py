@@ -57,7 +57,7 @@ def developerPage(request, user_name):
 				context = {'user': developer, 'games': games}
 				return render(request, 'developer_page.html', context)
 			else:
-				return redirect('userPage', user_name=request.user.username)
+				return redirect('/user/' + request.user.username)
 		else:
 			raise PermissionDenied
 	else:
