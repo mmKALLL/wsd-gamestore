@@ -29,5 +29,5 @@ urlpatterns = [
     url(r'^game/([0-9]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^game/([0-9]+)/play$', views.gamePlayView),
     url(r'^gamelist$', views.gameList),
-    url(r'^test$', views.test),
+    url(r'^test$', views.test)
 ]
