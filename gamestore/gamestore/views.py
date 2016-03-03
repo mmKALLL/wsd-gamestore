@@ -15,7 +15,7 @@ def register(request):
 			user = user_form.save()
 			user.set_password(user.password)
 			user.save()
-			userextension = UserExtension.create(user)
+			userextension = UserExtension(user=user)
 			userextension.save()
 			return redirect(index)
 	else:
@@ -27,8 +27,8 @@ def userPage(request, user_name):
 		if request.user.username == user_name:
 			user = get_object_or_404(User, pk=request.user.id)
 			userext = get_object_or_404(UserExtension, user=user)
-			gamesOwned = get_list_or_404(GamesOwned, userextension=userext)
-			games = map(self.game, gamesOwned)
+			gamesOwned = GamesOwned.objects.filter(userextension=userext)
+			games = [elem.game for elem in gamesOwned]
 			context = {'user': user, 'games': games}
 			return render(request, 'user.html', context)
 		else:
@@ -79,7 +79,7 @@ def gamePlayView(request, game_id):
 
 def gameList(request):
 	user = request.user
-	games = get_list_or_404(Game, isPublic=True)
+	games = Game.objects.filter(isPublic=True)
 	context = {'user': user, 'games': games}
 	return render(request, 'game_list.html', context)
 
