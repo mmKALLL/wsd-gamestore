@@ -80,7 +80,7 @@ def gamePlayView(request, game_id):
 def gameList(request):
 	user = request.user
 	games = Game.objects.filter(isPublic=True)
-	genres = []
+	genres = ['Unspecified']
 	for game in games:
 		if game.genre not in genres:
 			genres.append(game.genre)
