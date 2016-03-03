@@ -32,6 +32,17 @@ def userPage(request, user_id):
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
+def developerInfoPage(request):
+	if request.method == 'POST':
+		if request.user.is_authenticated():
+			user = request.user
+			user.userextension.isDeveloper = True
+			user.save()
+		else:
+			return render(request, 'auth_required.html', {'last_page': 'developerinfo'})
+	else:
+		return render(request, 'developerinfo.html', {})
+
 
 def developerPage(request, user_id):
 	if request.user.is_authenticated():
@@ -64,7 +75,7 @@ def gamePlayView(request, game_id):
 
 def gameList(request):
 	user = request.user
-	games = Game.objects.all()
+	games = get_list_or_404(Game, isPublic=True)
 	context = {'user': user, 'games': games}
 	return render(request, 'game_list.html', context)
 

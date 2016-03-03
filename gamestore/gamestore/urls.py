@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     url(r'^logout$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^user/([0-9a-zA-Z]+)$', views.userPage),
+    url(r'^developerinfo$', views.developerInfoPage),
     url(r'^developer/([0-9a-zA-Z]+)$', views.developerPage),
     url(r'^game/([0-9]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^game/([0-9]+)/play$', views.gamePlayView),
