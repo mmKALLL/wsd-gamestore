@@ -13,6 +13,7 @@ class UserExtension(models.Model):
 class Game(models.Model):
     name = models.CharField(max_length=80)
     URL = models.URLField(max_length=150, unique=True)
+    isPublic = models.BooleanField(default=False)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
     image = models.URLField(blank=True)
     image2 = models.URLField(blank=True)
