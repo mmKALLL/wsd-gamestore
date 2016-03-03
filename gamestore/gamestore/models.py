@@ -9,7 +9,6 @@ class UserExtension(models.Model):
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField('GamesOwned')
     
-
 class Game(models.Model):
     name = models.CharField(max_length=80, default=id)
     URL = models.URLField(max_length=150, unique=True, default=id)
