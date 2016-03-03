@@ -79,7 +79,7 @@ def gamePlayView(request, game_id):
 
 def gameList(request):
 	user = request.user
-	games = get_list_or_404(Game, isPublic=True)
+	games = Game.objects.filter(isPublic=True)
 	context = {'user': user, 'games': games}
 	return render(request, 'game_list.html', context)
 
