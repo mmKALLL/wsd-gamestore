@@ -88,6 +88,11 @@ header {
 	padding: 12px;
 }
 
+.username {
+	font-size: 24px;
+	color: #66A4DF;
+}
+
 footer {
 	width: 100%;
 	text-align: center;
