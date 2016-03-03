@@ -11,11 +11,11 @@ class UserExtension(models.Model):
     
 
 class Game(models.Model):
-    name = models.CharField(max_length=80)
-    URL = models.URLField(max_length=150, unique=True)
+    name = models.CharField(max_length=80, default=id)
+    URL = models.URLField(max_length=150, unique=True, default=id)
     gameSource = models.URLField(max_length=300, unique=True, blank=True)
     isPublic = models.BooleanField(default=False)
-    genre = models.CharField(max_length=80)
+    genre = models.CharField(max_length=30, default='Unspecified')
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
     image = models.URLField(blank=True)
     image2 = models.URLField(blank=True)
@@ -23,7 +23,7 @@ class Game(models.Model):
         User, 
         on_delete=models.SET_NULL, 
         null=True)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
+    price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     
 class GameSave(models.Model):
     data = models.TextField(blank=True) # JSON data about the saved game.
