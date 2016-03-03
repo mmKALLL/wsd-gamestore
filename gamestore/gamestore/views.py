@@ -84,7 +84,7 @@ def gameList(request):
 	for game in games:
 		if game.genre not in genres:
 			genres.append(game.genre)
-	context = {'user': user, 'games': games, 'genres': genres}
+	context = {'user': user, 'games': sorted(games), 'genres': sorted(genres)}
 	return render(request, 'game_list.html', context)
 
 def test(request):
