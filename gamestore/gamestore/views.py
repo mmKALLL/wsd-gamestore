@@ -80,7 +80,11 @@ def gamePlayView(request, game_id):
 def gameList(request):
 	user = request.user
 	games = Game.objects.filter(isPublic=True)
-	context = {'user': user, 'games': games}
+	genres = []
+	for game in games:
+		if game.genre not in genres:
+			genres.append(game.genre)
+	context = {'user': user, 'games': games, 'genres': genres}
 	return render(request, 'game_list.html', context)
 
 def test(request):
