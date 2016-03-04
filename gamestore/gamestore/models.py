@@ -39,7 +39,8 @@ class Game(models.Model):
         on_delete=models.SET_NULL, 
         null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    releaseDate = None
+    createDate = models.DateTimeField(auto_now_add=True, null=True) # TODO: Not sure if works.
+    updateDate = models.DateTimeField(auto_now=True, null=True)
     
 class GameSave(models.Model):
     data = models.TextField(blank=True) # JSON data about the saved game.
