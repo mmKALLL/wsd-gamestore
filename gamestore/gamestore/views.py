@@ -113,7 +113,7 @@ def gameList(request):
 	if len(genres) is 0:
 		context = {'user': user, 'games': games, 'genres': genres}
 	else:
-		context = {'user': user, 'games': sorted(games), 'genres': sorted(genres)}
+		context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'genres': sorted(genres)}
 	return render(request, 'game_list.html', context)
 
 def test(request):
