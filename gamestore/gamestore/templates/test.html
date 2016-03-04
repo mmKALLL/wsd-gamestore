@@ -20,6 +20,12 @@
             <p> {{user.userextension.isDeveloper}} </p>
             {% endfor %}
         </div>
+        <div>
+            {% for game in games %}
+            <p> {{game.name}} </p>
+            <p> {{game.URL}} </p>
+            {% endfor %}
+        </div>
         <footer>
 	        &copy; Quagmire Zone Underground, 2016
         </footer>

@@ -63,13 +63,18 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
-						return redirect('') # Does this work?
+						ownedgame = GamesOwned(paymentState=models.PAYMENT_DEV, game=newgame, userextension=request.user.userextension)
+						ownedgame.save()
+
+						return redirect('/developer/' + request.user.username)
 					else:
-						pass # TODO: Add some meaningful message to user.
+						return HttpResponse(new_game_form.errors)
+					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:					
 					developer = get_object_or_404(User, pk=request.user.id)
 					games = Game.objects.filter(developer=developer)  
-					context = {'user': developer, 'games': games}
+					new_game_form = GameSubmissionForm()
+					context = {'user': developer, 'games': games, 'form': new_game_form}
 					return render(request, 'developer_page.html', context)
 			else:
 				return redirect('/developerinfo')
@@ -79,20 +84,20 @@ def developerPage(request, user_name):
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
-def gameView(request, game_id):
+def gameView(request, view_URL):
 	user = request.user
-	game = get_object_or_404(Game, pk=game_id)
+	game = get_object_or_404(Game, URL=view_URL)
 	owned = False
 	if user.is_authenticated:
 		userext = get_object_or_404(UserExtension, user=user)
-		if GamesOwned.objects.get(game=game, userextension=userext): # TODO: Check if this works
+		if len(GamesOwned.objects.filter(game=game, userextension=userext)) >= 1: # TODO: Check if this works
 			owned = True
 	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
 
-def gamePlayView(request, game_id):
+def gamePlayView(request, view_URl):
 	if request.user.is_authenticated():
-		game = get_object_or_404(Game, pk=game_id)
+		game = get_object_or_404(Game, URL=view_URL)
 		context = {'game': game}
 		return render(request, 'game_play.html', context)
 	else:
