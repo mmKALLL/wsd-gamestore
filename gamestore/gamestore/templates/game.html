@@ -41,14 +41,14 @@
                 </div>
             </nav>
         </header>
-        <p>
-            {{game.image}} {{game.image2}} {{ game.name }} Genre: {{game.genre}} Developed by: {{game.developer}} {{game.price}}€
-        </p>
-        <p>
-            {{game.description}}
-        </p>
         <div class="container">
             <div class="row">
+        		<div class="generic">
+            		<img src="{{ game.image }}"><img src="{{ game.image2 }}"><br>{{ game.name }}<br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.releaseDate }}<br>{{ game.price }} €
+        		</div>
+        		<div class="generic">
+            		{{ game.description }}
+        		</div>
                 <div class="generic">
                     {% if user.is_authenticated %}
                         {% if owned == True %}

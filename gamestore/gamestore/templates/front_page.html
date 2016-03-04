@@ -52,7 +52,7 @@
                         {% if games|length > 0 %}
                             <div class="gameinfo">
                                 <div class="gameinfo-left">
-                                    <a href="/game/{{ games.0.id }}">{{ games.0.name }}</a><br>{{ games.0.image }}
+                                    <a href="/game/{{ games.0.URL }}">{{ games.0.name }}</a><br><img src="{{ games.0.image }}">
                                 </div>
                                 <div class="gameinfo-right">
                                     {{ games.0.genre }}<br>Released: {{ games.0.releaseDate }}<br>Developer: {{ games.0.developer }}<br>{{ games.0.price }} €
@@ -62,7 +62,7 @@
                         {% if games|length > 2 %}
                             <div class="gameinfo">
                                 <div class="gameinfo-left">
-                                    <a href="/game/{{ games.2.id }}">{{ games.2.name }}</a><br>{{ games.2.image }}
+                                    <a href="/game/{{ games.2.URL }}">{{ games.2.name }}</a><br><img src="{{ games.2.image }}">
                                 </div>
                                 <div class="gameinfo-right">
                                     {{ games.2.genre }}<br>Released: {{ games.2.releaseDate }}<br>Developer: {{ games.2.developer }}<br>{{ games.2.price }} €
@@ -74,7 +74,7 @@
                         {% if games|length > 1 %}
                             <div class="gameinfo">
                                 <div class="gameinfo-left">
-                                    <a href="/game/{{ games.1.id }}">{{ games.1.name }}</a><br>{{ games.1.image }}
+                                    <a href="/game/{{ games.1.URL }}">{{ games.1.name }}</a><br><img src="{{ games.1.image }}">
                                 </div>
                                 <div class="gameinfo-right">
                                     {{ games.1.genre }}<br>Released: {{ games.1.releaseDate }}<br>Developer: {{ games.1.developer }}<br>{{ games.1.price }} €
@@ -84,7 +84,7 @@
                         {% if games|length > 3 %}
                             <div class="gameinfo">
                                 <div class="gameinfo-left">
-                                    <a href="/game/{{ games.3.id }}">{{ games.3.name }}</a><br>{{ games.3.image }}
+                                    <a href="/game/{{ games.3.URL }}">{{ games.3.name }}</a><br><img src="{{ games.3.image }}">
                                 </div>
                                 <div class="gameinfo-right">
                                     {{ games.3.genre }}<br>Released: {{ games.3.releaseDate }}<br>Developer: {{ games.3.developer }}<br>{{ games.3.price }} €
