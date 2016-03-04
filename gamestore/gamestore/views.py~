@@ -61,7 +61,7 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
-						return redirect('')
+						return redirect('') # Does this work?
 					else:
 						pass # TODO: Add some meaningful message to user.
 				else:					
@@ -70,7 +70,8 @@ def developerPage(request, user_name):
 					context = {'user': developer, 'games': games}
 					return render(request, 'developer_page.html', context)
 			else:
-				return redirect('/user/' + request.user.username)
+				return redirect('/developerinfo')
+				#return redirect('/user/' + request.user.username)
 		else:
 			raise PermissionDenied
 	else:
@@ -79,7 +80,12 @@ def developerPage(request, user_name):
 def gameView(request, game_id):
 	user = request.user
 	game = get_object_or_404(Game, pk=game_id)
-	context = {'user': user, 'game': game}
+	owned = False
+	if user.is_authenticated:
+		userext = get_object_or_404(UserExtension, user=user)
+		if GamesOwned.objects.get(game=game, userextension=userext): #TODO: Check if this works
+			owned = True
+	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
 
 def gamePlayView(request, game_id):
