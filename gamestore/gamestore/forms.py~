@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.models import User, Game
+from django.contrib.auth.models import User
+from gamestore import Game
 
 class UserForm(forms.ModelForm):
     
