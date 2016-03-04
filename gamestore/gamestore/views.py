@@ -63,8 +63,12 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
-						ownedgame = GamesOwned(paymentState=models.PAYMENT_DEV, game=newgame, userextension=request.user.userextension)
+						ownedgame = GamesOwned(paymentState=PAYMENT_DEV, game=newgame)
 						ownedgame.save()
+						request.user.userextension.ownedGames.add(ownedgame)
+						ownedgame.save()
+						request.user.save()
+						request.user.userextension.save()
 
 						return redirect('/developer/' + request.user.username)
 					else:
