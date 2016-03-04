@@ -85,7 +85,7 @@ def gameView(request, view_URL):
 	owned = False
 	if user.is_authenticated:
 		userext = get_object_or_404(UserExtension, user=user)
-		if GamesOwned.objects.get(game=game, userextension=userext): # TODO: Check if this works
+		if len(GamesOwned.objects.filter(game=game, userextension=userext)) >= 1: # TODO: Check if this works
 			owned = True
 	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
