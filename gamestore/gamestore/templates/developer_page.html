@@ -34,6 +34,25 @@
             <div class="row">
                 <div class="generic username">Developer page - {{ user.username }}</div>
                 <div class="generic">Developer options?</div>
+                <div class="container">
+        	        <div class="row">
+        		        <div class="generic">
+        			        {% if user.is_authenticated %}
+                                {% if user.userextension.isDeveloper %}
+                                    This is the developer page, where you can add new games to Quagmire Zone Underground.
+                                    <!-- TODO: Should this be in a spoiler-type hidden area that is expanded upon clicking "Add new game?" -->            			            
+                                    <form method="POST" action="/developer/{{ user.username }}">
+                			            {% csrf_token %}
+                			            {{ form.as_p }}
+                			            <input class="btn submit" type="submit" value="Submit game" />
+            			            </form>
+                                {% else %} <!-- TODO: Remove this note? -->
+                                    Unfortunately, you do not have the permission to view our developer page. You can become one after reading our <a href="developerinfo" target="/">info page</a>.
+                                {% endif %}
+            		        {% endif %}
+            	        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>

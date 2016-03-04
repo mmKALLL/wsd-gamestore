@@ -9,12 +9,22 @@ class UserExtension(models.Model):
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField('GamesOwned')
     
+
+GAME_GENRES = (
+    'Unspecified',
+    'Action',
+    'Adventure',
+    'RPG',
+    'Puzzle',
+    'Racing',
+)
+ 
 class Game(models.Model):
-    name = models.CharField(max_length=80, default=id)
+    name = models.CharField(max_length=80, blank=True)
     URL = models.URLField(max_length=150, unique=True, default=id)
     gameSource = models.URLField(max_length=300, unique=True, blank=True)
     isPublic = models.BooleanField(default=False)
-    genre = models.CharField(max_length=30, default='Unspecified')
+    genre = models.CharField(max_length=30, default='Unspecified', choices=GAME_GENRES)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
     image = models.URLField(blank=True)
     image2 = models.URLField(blank=True)
@@ -43,7 +53,7 @@ class Highscore(models.Model):
         on_delete=models.CASCADE)
     
 class GamesOwned(models.Model):
-    paymentState = models.TextField() # Payment state in JSON???
+    paymentState = models.TextField() # Payment state; e.g. success, error, cancel
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE) 
