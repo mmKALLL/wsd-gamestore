@@ -1,1 +1,66 @@
-game.html
+{% load staticfiles %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Quagmire Zone Underground</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nosifer">
+        <link rel="stylesheet" type="text/css" href="{% static 'quagmire.css' %}">
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="title"><a href="/">Quagmire Zone<br>Underground</a></li>
+                </ul>
+                <div class="navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a href="/user/{{ user.username }}" class="btn btn-primary navbar-btn">{{ user.username }}</a>
+                            </li>
+                            {% if user.userextension.isDeveloper %}
+                                <li>
+                                    <a href="/developer/{{ user.username }}" class="btn btn-success navbar-btn">Developer page</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="/logout" class="btn btn-link navbar-btn" role="button">Logout</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="/login" class="btn btn-primary navbar-btn" role="button">Login</a>
+                            </li>
+                            <li>
+                                <a href="/register" class="btn btn-primary navbar-btn" role="button">Register</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <p>
+            {{game.image}} {{game.image2}} {{ game.name }} Genre: {{game.genre}} Developed by: {{game.developer}} {{game.price}}€
+        </p>
+        <p>
+            {{game.description}}
+        </p>
+        <div class="container">
+            <div class="row">
+                <div class="generic">
+                    {% if user.is_authenticated %}
+                        {% if owned == True %}
+                            <a href="play" class="btn btn-primary navbar-btn" role="button">Play the game!</a>
+                        {% else %}
+                            here shall be the link to payment service 
+                        {% endif %}
+                    highscores list
+                    your best score
+                </div>
+            </div>
+        </div>
+        <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
+    </body>
+</html>
