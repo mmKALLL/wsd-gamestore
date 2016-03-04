@@ -24,7 +24,7 @@ GAME_GENRES = (
     (GENRE_PUZZLE, 'Puzzle'),
     (GENRE_RACING, 'Racing'),
 )
- 
+
 class Game(models.Model):
     name = models.CharField(max_length=80, blank=True)
     URL = models.URLField(max_length=150, unique=True, default=id)
