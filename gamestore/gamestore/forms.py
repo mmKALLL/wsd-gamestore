@@ -12,7 +12,7 @@ class UserForm(ModelForm):
         fields = ['username', 'email', 'password']
     
 
-class GameSubmissionForm(forms.ModelForm):
+class GameSubmissionForm(ModelForm):
     
     class Meta:
         model = Game
