@@ -10,14 +10,14 @@ class UserForm(forms.ModelForm):
         fields = ['username', 'email', 'password']
     
 
-class GameSubmitForm(forms.ModelForm):
+class GameSubmissionForm(forms.ModelForm):
     
     class Meta:
         model = Game
         
         fields = ['name', 'URL', 'gameSource', 'genre', 'description', 'price', 'image', 'image2', 'isPublic']
         widgets = {
-            'description': Textarea(attrs={'cols': 80, 'rows': 20}),
+            'description': Textarea(attrs={'cols': 80, 'rows': 20, 'label': 'Awesome description!'}),
         }
 
 class Game(models.Model):

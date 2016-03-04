@@ -61,7 +61,7 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
-						return redirect('') # Does this work?
+						return redirect('')
 					else:
 						pass # TODO: Add some meaningful message to user.
 				else:					
