@@ -7,8 +7,11 @@ from gamestore.forms import *
 
 def index(request):
 	games = Game.objects.filter(isPublic=True)
-	games = sorted(games, key=lambda x: x.releaseDate, reverse=True) # Might break on releaseDate
-	return render(request, 'front_page.html', {'games': games[:4]})
+	if len(games) is 0:
+		return render(request, 'front_page.html', {'games': []})
+	else:
+		games = sorted(games, key=lambda x: x.createDate, reverse=True)
+		return render(request, 'front_page.html', {'games': games[:4]})
 
 def register(request):
 	if request.method == 'POST':
