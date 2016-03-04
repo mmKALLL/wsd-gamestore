@@ -63,8 +63,12 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
-						ownedgame = GamesOwned(paymentState=models.PAYMENT_DEV, game=newgame, userextension=request.user.userextension)
+						ownedgame = GamesOwned(paymentState=PAYMENT_DEV, game=newgame)
 						ownedgame.save()
+						request.user.userextension.ownedGames.add(ownedgame)
+						ownedgame.save()
+						request.user.save()
+						request.user.userextension.save()
 
 						return redirect('/developer/' + request.user.username)
 					else:
@@ -95,7 +99,7 @@ def gameView(request, view_URL):
 	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
 
-def gamePlayView(request, view_URl):
+def gamePlayView(request, view_URL):
 	if request.user.is_authenticated():
 		game = get_object_or_404(Game, URL=view_URL)
 		context = {'game': game}

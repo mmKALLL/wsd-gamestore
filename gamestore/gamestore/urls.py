@@ -27,8 +27,8 @@ urlpatterns = [
     url(r'^user/([0-9a-zA-Z@.+-_]+)$', views.userPage),
     url(r'^developerinfo$', views.developerInfoPage),
     url(r'^developer/([0-9a-zA-Z@.+-_]+)$', views.developerPage),
-    url(r'^game/([0-9a-zA-Z~.-_]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^game/([0-9a-zA-Z~.-_]+)/play$', views.gamePlayView),
+    url(r'^game/([0-9a-zA-Z~.-_]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test)
 ]
