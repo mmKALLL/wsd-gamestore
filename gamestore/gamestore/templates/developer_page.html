@@ -49,6 +49,16 @@
                                     <!-- Add a list of created games here. -->
                                     List of games created by you:
                                     (in progress; remember settings)
+                                    {% for game in games %}
+                                        <div class="gameinfo">
+                                            <div class="gameinfo-left">
+                                                <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img src="{{ game.image }}"><img src="{{ game.image2 }}">
+                                            </div>
+                                            <div class="gameinfo-right">
+                                                Released: {{ game.createDate }}<br>{{ game.price }} €
+                                            </div>
+                                        </div>
+                                    {% endfor %}
                                 {% else %} <!-- TODO: Remove this note? -->
                                     Unfortunately, you do not have the permission to view our developer page. You can become one after reading our <a href="developerinfo" target="/">info page</a>.
                                 {% endif %}

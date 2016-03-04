@@ -88,6 +88,32 @@ def developerPage(request, user_name):
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
+def gameDeleteView(request, viewURL):
+	if request.method == 'POST':
+		game = get_object_or_404(Game, URL=view_URL)
+		if game.developer == request.user:
+			game.delete()
+			return redirect('/developer/' + request.user.username)
+		else:
+			raise PermissionDenied
+	else:
+		raise PermissionDenied
+
+def gameEditView(request, viewURL):
+	if request.method == 'POST':
+		game = get_object_or_404(Game, URL=view_URL)
+		if game.developer == request.user:
+			form = GameSubmissionForm(data=request.POST, instance=game)
+			if form.is_valid():
+				form.save()
+				return redirect('/developer/' + request.user.username)
+			else:
+				return HttpResponse(form.errors)
+		else:
+			raise PermissionDenied
+	else:
+		raise PermissionDenied
+
 def gameView(request, view_URL):
 	user = request.user
 	game = get_object_or_404(Game, URL=view_URL)
