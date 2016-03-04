@@ -52,7 +52,7 @@
                 <div class="generic">
                     {% if user.is_authenticated %}
                         {% if owned == True %}
-                            <a href="play" class="btn btn-primary navbar-btn" role="button">Play the game!</a>
+                            <a href="/game/{{ game.URL }}/play" class="btn btn-primary" role="button">Play the game!</a>
                         {% else %}
                             here shall be the link to payment service 
                         {% endif %}

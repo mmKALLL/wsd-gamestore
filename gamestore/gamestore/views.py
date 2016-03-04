@@ -99,7 +99,7 @@ def gameView(request, view_URL):
 	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
 
-def gamePlayView(request, view_URl):
+def gamePlayView(request, view_URL):
 	if request.user.is_authenticated():
 		game = get_object_or_404(Game, URL=view_URL)
 		context = {'game': game}
