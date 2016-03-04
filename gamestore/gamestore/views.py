@@ -79,9 +79,9 @@ def developerPage(request, user_name):
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
-def gameView(request, game_id):
+def gameView(request, view_URL):
 	user = request.user
-	game = get_object_or_404(Game, pk=game_id)
+	game = get_object_or_404(Game, URL=view_URL)
 	owned = False
 	if user.is_authenticated:
 		userext = get_object_or_404(UserExtension, user=user)
@@ -90,9 +90,9 @@ def gameView(request, game_id):
 	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
 
-def gamePlayView(request, game_id):
+def gamePlayView(request, view_URl):
 	if request.user.is_authenticated():
-		game = get_object_or_404(Game, pk=game_id)
+		game = get_object_or_404(Game, URL=view_URL)
 		context = {'game': game}
 		return render(request, 'game_play.html', context)
 	else:
