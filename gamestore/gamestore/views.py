@@ -2,13 +2,8 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.core.exceptions import PermissionDenied
 from gamestore.models import *
-<<<<<<< HEAD
-from gamestore.forms import *
-from django.contrib.auth.models import User
-=======
 from django.contrib.auth.models import User
 from gamestore.forms import *
->>>>>>> 6c594d50679fb808f1404d6337ed95b2619a50ea
 
 def index(request):
 	games = Game.objects.filter(isPublic=True)
