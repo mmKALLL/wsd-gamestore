@@ -27,7 +27,7 @@ GAME_GENRES = (
 
 class Game(models.Model):
     name = models.CharField(max_length=80)
-    URL = models.URLField(max_length=150, unique=True)
+    URL = models.CharField(max_length=150, unique=True)
     gameSource = models.URLField(max_length=300, unique=True, blank=True)
     isPublic = models.BooleanField(default=False)
     genre = models.CharField(max_length=30, default='Unspecified', choices=GAME_GENRES)
@@ -59,8 +59,20 @@ class Highscore(models.Model):
         User,
         on_delete=models.CASCADE)
     
+
+PAYMENT_SUCCESS = 'success'
+PAYMENT_ERROR = 'error'
+PAYMENT_CANCEL = 'cancel'
+PAYMENT_DEV = 'dev'
+PAYMENT_STATES = (
+    (PAYMENT_SUCCESS, 'Success'),
+    (PAYMENT_ERROR, 'Error'),
+    (PAYMENT_CANCEL, 'Canceled'),
+    (PAYMENT_DEV, 'Developer'),
+)
+
 class GamesOwned(models.Model):
-    paymentState = models.TextField() # Payment state; e.g. success, error, cancel
+    paymentState = models.TextField() # Payment state; success, error, cancel, developer
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE) 

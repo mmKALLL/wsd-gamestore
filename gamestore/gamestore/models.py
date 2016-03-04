@@ -59,8 +59,21 @@ class Highscore(models.Model):
         User,
         on_delete=models.CASCADE)
     
+
+PAYMENT_SUCCESS = 'success'
+PAYMENT_ERROR = 'error'
+PAYMENT_CANCEL = 'cancel'
+PAYMENT_DEV = 'dev'
+
+PAYMENT_STATES = (
+    (PAYMENT_SUCCESS, 'Success'),
+    (PAYMENT_ERROR, 'Error'),
+    (PAYMENT_CANCEL, 'Canceled'),
+    (PAYMENT_DEV, 'Developer'),
+)
+
 class GamesOwned(models.Model):
-    paymentState = models.TextField() # Payment state; e.g. success, error, cancel
+    paymentState = models.TextField() # Payment state; success, error, cancel, developer
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE) 
