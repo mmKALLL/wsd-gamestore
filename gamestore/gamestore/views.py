@@ -2,11 +2,13 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.core.exceptions import PermissionDenied
 from gamestore.forms import *
-from django.contrib.auth.models import User  #TODO: Check if this includes UserExtension
+from django.contrib.auth.models import User
 from gamestore.models import *
 
 def index(request):
-	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
+	games = Game.objects.filter(isPublic=True)
+	games = sorted(games, key=lambda x: x.releaseDate, reverse=True) # Might break on releaseDate
+	return render(request, 'front_page.html', {'games': games[:4]})
 
 def register(request):
 	if request.method == 'POST':
@@ -99,11 +101,14 @@ def gamePlayView(request, game_id):
 def gameList(request):
 	user = request.user
 	games = Game.objects.filter(isPublic=True)
-	genres = ['Unspecified']
+	genres = []
 	for game in games:
 		if game.genre not in genres:
 			genres.append(game.genre)
-	context = {'user': user, 'games': sorted(games), 'genres': sorted(genres)}
+	if len(genres) is 0:
+		context = {'user': user, 'games': games, 'genres': genres}
+	else:
+		context = {'user': user, 'games': sorted(games), 'genres': sorted(genres)}
 	return render(request, 'game_list.html', context)
 
 def test(request):

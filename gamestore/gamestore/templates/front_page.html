@@ -43,26 +43,56 @@
         </header>
         <div class="container">
             <div class="row">
-                <div class="col-sm-6">
-                    <div class="game-frontpage">
-                        Game 1<br>
-                        <img src="https://yt3.ggpht.com/-xA3Tu509GOg/AAAAAAAAAAI/AAAAAAAAAAA/MLrAa-Mfl7c/s88-c-k-no/photo.jpg">
+                {% ifequal games|length 0 %}
+                    <div class="generic">
+                        No games were found. Perhaps you should become a <a href="/developerinfo">developer</a>?
                     </div>
-                    <div class="game-frontpage">
-                        Game 2<br>
-                        <img src="https://yt3.ggpht.com/-xA3Tu509GOg/AAAAAAAAAAI/AAAAAAAAAAA/MLrAa-Mfl7c/s88-c-k-no/photo.jpg">
+                {% else %}
+                    <div class="col-sm-6">
+                        {% if games|length > 0 %}
+                            <div class="gameinfo">
+                                <div class="gameinfo-left">
+                                    <a href="/game/{{ games.0.id }}">{{ games.0.name }}</a><br>{{ games.0.image }}
+                                </div>
+                                <div class="gameinfo-right">
+                                    {{ games.0.genre }}<br>Released: {{ games.0.releaseDate }}<br>Developer: {{ games.0.developer }}<br>{{ games.0.price }} €
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if games|length > 2 %}
+                            <div class="gameinfo">
+                                <div class="gameinfo-left">
+                                    <a href="/game/{{ games.2.id }}">{{ games.2.name }}</a><br>{{ games.2.image }}
+                                </div>
+                                <div class="gameinfo-right">
+                                    {{ games.2.genre }}<br>Released: {{ games.2.releaseDate }}<br>Developer: {{ games.2.developer }}<br>{{ games.2.price }} €
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="game-frontpage">
-                        Game 3<br>
-                        <img src="https://yt3.ggpht.com/-xA3Tu509GOg/AAAAAAAAAAI/AAAAAAAAAAA/MLrAa-Mfl7c/s88-c-k-no/photo.jpg">
+                    <div class="col-sm-6">
+                        {% if games|length > 1 %}
+                            <div class="gameinfo">
+                                <div class="gameinfo-left">
+                                    <a href="/game/{{ games.1.id }}">{{ games.1.name }}</a><br>{{ games.1.image }}
+                                </div>
+                                <div class="gameinfo-right">
+                                    {{ games.1.genre }}<br>Released: {{ games.1.releaseDate }}<br>Developer: {{ games.1.developer }}<br>{{ games.1.price }} €
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if games|length > 3 %}
+                            <div class="gameinfo">
+                                <div class="gameinfo-left">
+                                    <a href="/game/{{ games.3.id }}">{{ games.3.name }}</a><br>{{ games.3.image }}
+                                </div>
+                                <div class="gameinfo-right">
+                                    {{ games.3.genre }}<br>Released: {{ games.3.releaseDate }}<br>Developer: {{ games.3.developer }}<br>{{ games.3.price }} €
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="game-frontpage">
-                        Game 4<br>
-                        <img src="https://yt3.ggpht.com/-xA3Tu509GOg/AAAAAAAAAAI/AAAAAAAAAAA/MLrAa-Mfl7c/s88-c-k-no/photo.jpg">
-                    </div>
-                </div>
+                {% endifequal %}
             </div>
         </div>
         <div class="container">

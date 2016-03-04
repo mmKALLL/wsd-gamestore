@@ -43,18 +43,26 @@
         </header>
         <div class="container">
             <div class="row">
-                {% for genre in genres %}
+                {% if games|length == 0 %}
                     <div class="generic">
-                        <h3> {{genre}}: </h3> 
-                            {% for game in games %}
-                                {% ifequal game.genre genre %}
-                                    <p>
-                                        {{game.image}} <a href="/game/{{game.id}}" >{{ game.name }}</a> Developed by: {{game.developer}} {{game.price}}€
-                                    </p>
-                                {% endifequal %}
-                            {% endfor %}
+                        No games were found. Perhaps you should become a <a href="/developerinfo">developer</a>?
                     </div>
-                {% endfor %}    
+                {% else %}
+                    {% for genre in genres %}
+                        {% for game in games %}
+                            {% if game.genre == genre %}
+                                <div class="gameinfo">
+                                    <div class="gameinfo-left">
+                                        <a href="/game/{{ game.id }}">{{ game.name }}</a><br>{{ game.image }}
+                                    </div>
+                                    <div class="gameinfo-right">
+                                        {{ genre }}<br>Released: {{ game.releaseDate }}<br>Developer: {{ game.developer }}<br>{{ game.price }} €
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
         <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>

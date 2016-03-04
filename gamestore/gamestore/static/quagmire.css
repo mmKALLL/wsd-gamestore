@@ -74,11 +74,21 @@ header {
     transform: translate(0, -50%);
 }*/
 
-.game-frontpage {
+.gameinfo {
 	background-color: #273B52;
 	border: 1px solid #337AB7;
 	margin: 18px 0;
 	padding: 12px;
+	overflow: hidden;
+}
+
+.gameinfo-left {
+	float: left;
+	font-size: 20px;
+}
+
+.gameinfo-right {
+	float: right;
 }
 
 .generic {
