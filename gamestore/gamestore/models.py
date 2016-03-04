@@ -26,8 +26,8 @@ GAME_GENRES = (
 )
  
 class Game(models.Model):
-    name = models.CharField(max_length=80, blank=True)
-    URL = models.URLField(max_length=150, unique=True, default=id)
+    name = models.CharField(max_length=80)
+    URL = models.URLField(max_length=150, unique=True)
     gameSource = models.URLField(max_length=300, unique=True, blank=True)
     isPublic = models.BooleanField(default=False)
     genre = models.CharField(max_length=30, default='Unspecified', choices=GAME_GENRES)

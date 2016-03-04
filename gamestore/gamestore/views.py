@@ -61,13 +61,15 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
-						return redirect('') # Does this work?
+						return redirect('/developer/' + request.user.username)
 					else:
-						pass # TODO: Add some meaningful message to user.
+						return HttpResponse(new_game_form.errors)
+					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:					
 					developer = get_object_or_404(User, pk=request.user.id)
 					games = Game.objects.filter(developer=developer)  
-					context = {'user': developer, 'games': games}
+					new_game_form = GameSubmissionForm()
+					context = {'user': developer, 'games': games, 'form': new_game_form}
 					return render(request, 'developer_page.html', context)
 			else:
 				return redirect('/developerinfo')
