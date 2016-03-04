@@ -17,7 +17,7 @@ class GameSubmitForm(forms.ModelForm):
         
         fields = ['name', 'URL', 'gameSource', 'genre', 'description', 'price', 'image', 'image2', 'isPublic']
         widgets = {
-            'description': Textarea(attrs={'cols': 80, 'rows': 20, 'label': 'Awesome description!'}),
+            'description': Textarea(attrs={'cols': 80, 'rows': 20}),
         }
 
 class Game(models.Model):

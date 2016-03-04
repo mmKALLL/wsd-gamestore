@@ -9,14 +9,20 @@ class UserExtension(models.Model):
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField('GamesOwned')
     
+GENRE_UNSPECIFIED = 'Unspecified'
+GENRE_ACTION = 'Action'
+GENRE_ADVENTURE = 'Adventure'
+GENRE_RPG = 'RPG'
+GENRE_PUZZLE = 'Puzzle'
+GENRE_RACING = 'Racing'
 
 GAME_GENRES = (
-    'Unspecified',
-    'Action',
-    'Adventure',
-    'RPG',
-    'Puzzle',
-    'Racing',
+    (GENRE_UNSPECIFIED, 'Unspecified'),
+    (GENRE_ACTION, 'Action'),
+    (GENRE_ADVENTURE, 'Adventure'),
+    (GENRE_RPG, 'RPG'),
+    (GENRE_PUZZLE, 'Puzzle'),
+    (GENRE_RACING, 'Racing'),
 )
  
 class Game(models.Model):
