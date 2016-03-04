@@ -42,6 +42,8 @@ def developerInfoPage(request):
 			user = request.user
 			user.userextension.isDeveloper = True
 			user.save()
+			user.userextension.save()
+			return render(request, 'developerinfo.html', {})
 		else:
 			return render(request, 'auth_required.html', {'last_page': 'developerinfo'})
 	else:
@@ -53,7 +55,7 @@ def developerPage(request, user_name):
 		if request.user.username == user_name:
 			if request.user.userextension.isDeveloper == True:
 				developer = get_object_or_404(User, pk=request.user.id)
-				games = get_list_or_404(Game, developer=developer)  
+				games = Game.objects.filter(developer=developer)  
 				context = {'user': developer, 'games': games}
 				return render(request, 'developer_page.html', context)
 			else:
