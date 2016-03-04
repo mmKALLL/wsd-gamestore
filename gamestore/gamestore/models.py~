@@ -64,6 +64,7 @@ PAYMENT_SUCCESS = 'success'
 PAYMENT_ERROR = 'error'
 PAYMENT_CANCEL = 'cancel'
 PAYMENT_DEV = 'dev'
+
 PAYMENT_STATES = (
     (PAYMENT_SUCCESS, 'Success'),
     (PAYMENT_ERROR, 'Error'),
