@@ -2,8 +2,8 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.core.exceptions import PermissionDenied
 from gamestore.forms import *
-from django.contrib.auth.models import User  #TODO: Check if this includes UserExtension
 from gamestore.models import *
+from django.contrib.auth.models import User  #TODO: Check if this includes UserExtension
 
 def index(request):
 	return render(request, 'front_page.html', {}) # TODO: Possibly change HTML name???
@@ -61,6 +61,9 @@ def developerPage(request, user_name):
 						newgame = new_game_form.save()
 						newgame.developer = request.user
 						newgame.save()
+						ownedgame = GamesOwned(paymentState=models.PAYMENT_DEV, game=newgame, userextension=request.user.userextension)
+						ownedgame.save()
+
 						return redirect('/developer/' + request.user.username)
 					else:
 						return HttpResponse(new_game_form.errors)
