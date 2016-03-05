@@ -60,7 +60,7 @@
                                         
                                         <div class="gameinfo">
                                             <div class="gameinfo-left">
-                                                <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img src="{{ game.image }}"><img src="{{ game.image2 }}">
+                                                <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img class="resize" src="{{ game.image }}"><img class="resize image-secondary" src="{{ game.image2 }}">
                                             </div>
                                             <div class="gameinfo-right">
                                                 Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
@@ -80,6 +80,6 @@
                 </div>
             </div>
         </div>
-        <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
+        <footer class="footer">&copy; 2016 Quagmire Zone Underground. All rights reserved.<br><a href="mailto:vskatshuma@gmail.com">Contact us</a> | Become a <a href="/developerinfo">developer</a></footer>
     </body>
 </html>

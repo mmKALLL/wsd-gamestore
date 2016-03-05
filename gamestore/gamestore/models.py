@@ -9,21 +9,35 @@ class UserExtension(models.Model):
         parent_link=False)
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField('GamesOwned')
-    
-GENRE_UNSPECIFIED = 'Other'
+
 GENRE_ACTION = 'Action'
 GENRE_ADVENTURE = 'Adventure'
-GENRE_RPG = 'RPG'
+GENRE_FIGHTING = 'Fighting'
+GENRE_MULTIPLAYER = 'Multiplayer'
+GENRE_PLATFORM = 'Platform'
 GENRE_PUZZLE = 'Puzzle'
 GENRE_RACING = 'Racing'
+GENRE_RPG = 'RPG'
+GENRE_SHOOTER = 'Shooter'
+GENRE_SIMULATION = 'Simulation'
+GENRE_SPORTS = 'Sports'
+GENRE_STRATEGY = 'Strategy'
+GENRE_UNSPECIFIED = 'Other'
 
 GAME_GENRES = (
-    (GENRE_UNSPECIFIED, 'Other'),
     (GENRE_ACTION, 'Action'),
     (GENRE_ADVENTURE, 'Adventure'),
-    (GENRE_RPG, 'RPG'),
+    (GENRE_FIGHTING, 'Fighting'),
+    (GENRE_MULTIPLAYER, 'Multiplayer'),
+    (GENRE_PLATFORM, 'Platform'),
     (GENRE_PUZZLE, 'Puzzle'),
     (GENRE_RACING, 'Racing'),
+    (GENRE_RPG, 'RPG'),
+    (GENRE_SHOOTER, 'Shooter'),
+    (GENRE_SIMULATION, 'Simulation'),
+    (GENRE_SPORTS, 'Sports'),
+    (GENRE_STRATEGY, 'Strategy'),
+    (GENRE_UNSPECIFIED, 'Other'),
 )
 
 URLAllowedChars = RegexValidator(r'^[0-9a-zA-Z~\.\-_]+$', 'Only alphanumeric characters and ~/./-/_ are allowed.')
