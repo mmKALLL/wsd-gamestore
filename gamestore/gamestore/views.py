@@ -7,8 +7,11 @@ from gamestore.forms import *
 
 def index(request):
 	games = Game.objects.filter(isPublic=True)
-	games = sorted(games, key=lambda x: x.releaseDate, reverse=True) # Might break on releaseDate
-	return render(request, 'front_page.html', {'games': games[:4]})
+	if len(games) is 0:
+		return render(request, 'front_page.html', {'games': []})
+	else:
+		games = sorted(games, key=lambda x: x.createDate, reverse=True)
+		return render(request, 'front_page.html', {'games': games[:4]})
 
 def register(request):
 	if request.method == 'POST':
@@ -87,6 +90,32 @@ def developerPage(request, user_name):
 			raise PermissionDenied
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
+
+def gameDeleteView(request, viewURL):
+	if request.method == 'POST':
+		game = get_object_or_404(Game, URL=view_URL)
+		if game.developer == request.user:
+			game.delete()
+			return redirect('/developer/' + request.user.username)
+		else:
+			raise PermissionDenied
+	else:
+		raise PermissionDenied
+
+def gameEditView(request, viewURL):
+	if request.method == 'POST':
+		game = get_object_or_404(Game, URL=view_URL)
+		if game.developer == request.user:
+			form = GameSubmissionForm(data=request.POST, instance=game)
+			if form.is_valid():
+				form.save()
+				return redirect('/developer/' + request.user.username)
+			else:
+				return HttpResponse(form.errors)
+		else:
+			raise PermissionDenied
+	else:
+		raise PermissionDenied
 
 def gameView(request, view_URL):
 	user = request.user
