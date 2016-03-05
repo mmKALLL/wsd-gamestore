@@ -43,9 +43,8 @@
         </header>
         <div class="container">
             <div class="row">
-                <div class="generic">
-                    <iframe src="{{ game.gameSource }}" width=800 height=600></iframe>
-                </div>
+                <div class="gameinfo"><div class="description gameinfo-left">{{ game.name }}</div><a href="/game/{{ game.URL }}" class="btn btn-primary gameinfo-right">Back</a></div>
+                <div class="generic"><iframe src="{{ game.gameSource }}"></iframe></div>
             </div>
         </div>
         <footer class="footer">&copy; 2016 Quagmire Zone Underground. All rights reserved.<br><a href="mailto:vskatshuma@gmail.com">Contact us</a> | Become a <a href="/developerinfo">developer</a></footer>
