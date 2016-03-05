@@ -30,6 +30,10 @@ textarea {
 	color: #000000;
 }
 
+.collapser {
+	margin-top: 6px;
+}
+
 form {
 	margin-bottom: 0;
 }
@@ -98,6 +102,10 @@ header {
 
 .gameinfo-right {
 	float: right;
+}
+
+.edit {
+	clear: both;
 }
 
 .resize {
