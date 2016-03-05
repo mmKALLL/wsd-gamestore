@@ -19,30 +19,30 @@ def index(request):
 
 
 def register(request):
-	if request.method == 'POST':
-		user_form = UserForm(data=request.POST)
-		if user_form.is_valid():
-			user = user_form.save()
-			user.set_password(user.password)
-			user.save()
-			userextension = UserExtension(user=user)
-			userextension.save()
-            if user.email:
-                send_mail(
-                    # Subject
-                    'Validate your Quagmire Zone Underground account', 
-                    # Message                
-                    'Hi, and thank you for joining Quagmire Zone Underground.\n\nPlease use the following URL to validate your account.\n\nhttp://localhost:8000/user/' + user.name + '/validate?key=' + md5(str(user.id).encode('ascii')).hexdigest() + '\n\nThis message is safe to ignore if you received by error. Please do not share the link with anyone.\n\nBest Regards,\nQuagmire Zone Underground',
-                    # Sender
-                    'no-reply@quagmire.com',
-                    # Recipients
-                    [user.email],
-                    # Fail silently?
-                    fail_silently=False)
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            userextension = UserExtension(user=user)
+            userextension.save()
+            if user.email: # Email disabled because we don't have an SMTP server.
+#                send_mail(
+#                    # Subject
+#                    'Validate your Quagmire Zone Underground account',
+#                    # Message
+#                    'Hi, and thank you for joining Quagmire Zone Underground.\n\nPlease use the following URL to validate your account.\n\nhttp://localhost:8000/user/' + user.username + '/validate?key=' + md5(str(user.id).encode('ascii')).hexdigest() + '\n\nThis message is safe to ignore if you received by error. Please do not share the link with anyone.\n\nBest Regards,\nQuagmire Zone Underground',
+#                    # Sender
+#                    'no-reply@quagmire.com',
+#                    # Recipients
+#                    [user.email],
+#                    # Fail silently?
+#                    fail_silently=False)
             return redirect(index)
-	else:
-		user_form = UserForm()
-	return render(request, 'register.html', {'form': user_form})
+    else:
+        user_form = UserForm()
+    return render(request, 'register.html', {'form': user_form})
 
 
 def userValidation(request, user_name):
@@ -51,7 +51,7 @@ def userValidation(request, user_name):
         user.userextension.isValidated = True # Does not actually affect anything...
         user.save()
         user.userextension.save()
-        return 
+        return redirect('/user/' + user_name) 
     else:
         return HttpResponseBadRequest("It seems like your validation URL is not correct.")
 
@@ -118,9 +118,14 @@ def developerPage(request, user_name):
 					else:
 						return HttpResponse(new_game_form.errors)
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
-				else:					
+				else:
 					developer = get_object_or_404(User, pk=request.user.id)
-					games = Game.objects.filter(developer=developer)  
+					games = Game.objects.filter(developer=developer) 
+					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)
+					boughtGames = []
+					for boughtGame in sorted(gamesBought, key=lambda x: (x.game.name, x.createDate)):
+						if boughtGame.game in games:
+							boughtGames.append(boughtGame)
 					new_game_form = GameSubmissionForm()
 					game_editing_forms = []
 					for x in games:
@@ -131,7 +136,7 @@ def developerPage(request, user_name):
 						#else:
 						#	return HttpResponse(editing_form.errors)
 					gameforms = zip(games, game_editing_forms)
-					context = {'user': developer, 'games': games, 'form': new_game_form, 'editforms': game_editing_forms, 'gameforms': gameforms}
+					context = {'user': developer, 'games': games, 'form': new_game_form, 'editforms': game_editing_forms, 'gameforms': gameforms, 'boughtgames': boughtGames}
 					return render(request, 'developer_page.html', context)
 			else:
 				return redirect('/developerinfo')
@@ -143,7 +148,6 @@ def developerPage(request, user_name):
 
 
 
-# TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
 	user = request.user
 	game = get_object_or_404(Game, URL=view_URL)
@@ -236,24 +240,24 @@ def gameEditView(request, view_URL):
 
 
 def gameStatsAPIhandling(request, view_URL):
-    if request.GET.get('format', '').lower == 'json' and request.GET.get('action', '').lower == 'highscores':
+    if request.GET.get('format', '').lower() == 'json' and request.GET.get('action', '').lower() == 'highscores':
         amount = int(request.GET.get('amount', '10'))
         context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
         scores = []
+        game = get_object_or_404(Game, URL=view_URL)
         highscores = Highscore.objects.filter(game=game)
-	    players = User.objects.all()
-	    playerscores = []
-	    for player in players:
-	    	personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
-	    	if len(personalscores) >= 1:
-	    		playerscores.append(personalscores[0])
-        playerscores = playerscores.sorted(key=lambda x: x.data.score)
-        
+        players = User.objects.all()
+        playerscores = []
+        for player in players:
+            personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+            if len(personalscores) >= 1:
+                playerscores.append(personalscores[0])
+        playerscores = sorted(playerscores, key=lambda x: x.data.score) # TODO: Might break on highscores
+
         context.update({'scores': playerscores[:amount]})
         return render(request, 'restful_stats.html', context)
     else:
         return HttpResponseBadRequest("Bad request to the API.")
-
 
 def gameList(request):
 	user = request.user

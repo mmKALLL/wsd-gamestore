@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/quagmire/static/'
 
 
-# Redirecting URLs (login, auth, payment)
+# Redirecting URLs (used in login)
 
 LOGIN_REDIRECT_URL = '/'
 

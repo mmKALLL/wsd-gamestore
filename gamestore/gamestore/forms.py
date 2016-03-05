@@ -11,6 +11,7 @@ class UserForm(ModelForm):
         model = User
         fields = ['username', 'email', 'password']
     
+
 class UserEditForm(ModelForm):
 
     password = forms.CharField(widget=forms.PasswordInput())
@@ -18,6 +19,7 @@ class UserEditForm(ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'password']
+
 
 class GameSubmissionForm(ModelForm):
     
@@ -34,13 +36,14 @@ class GameSubmissionForm(ModelForm):
             'image2': URLInput(attrs={'size': 40}),
         }
 
+
 class GameEditingForm(ModelForm):
     
     class Meta:
         model = Game
         
         fields = ['name', 'gameSource', 'genre', 'description', 'price', 'image', 'image2', 'isPublic']
-        # Label does not work; field name different; cols can't be adjusted dynamically based on page width.
+        # Label does not work; field name different; cols can't be adjusted dynamically based on page width. Handled in template.
         widgets = {
             'description': Textarea(attrs={'cols': 80, 'rows': 20, 'label': 'Awesome description!'}),
         }
