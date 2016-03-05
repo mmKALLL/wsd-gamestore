@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, TextInput, URLInput, Textarea
 from django.contrib.auth.models import User
 from gamestore.models import Game
 
@@ -25,9 +25,13 @@ class GameSubmissionForm(ModelForm):
         model = Game
         
         fields = ['name', 'URL', 'gameSource', 'genre', 'description', 'price', 'image', 'image2', 'isPublic']
-        # Label does not work; field name different; cols can't be adjusted dynamically based on page width.
         widgets = {
-            'description': Textarea(attrs={'cols': 80, 'rows': 20, 'label': 'Awesome description!'}),
+            'name': TextInput(attrs={'size': 46}),
+            'URL': TextInput(attrs={'size': 34}),
+            'gameSource': URLInput(attrs={'size': 40}),
+            'description': Textarea(attrs={'rows': 10}),
+            'image': URLInput(attrs={'size': 40}),
+            'image2': URLInput(attrs={'size': 40}),
         }
 
 class GameEditingForm(ModelForm):

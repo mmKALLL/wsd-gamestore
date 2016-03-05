@@ -43,43 +43,48 @@
         </header>
         <div class="container">
             <div class="row">
-                <div class="generic">
+                {% if purchased_now %}
+                    <div class="generic success">You have successfully purchased {{ game.name }}! You can now play the game!</div>
+                {% endif %}
+                <div class="gameinfo">
                     <div class="name">{{ game.name }}</div><img class="resize" src="{{ game.image }}"><img class="resize" src="{{ game.image2 }}"><br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
+                    <div class="gameinfo-right">
+                        {% if user.is_authenticated %}
+                            {% if owned %}
+                                <a href="/game/{{ game.URL }}/play" class="btn btn-success" role="button">Play!</a>
+                            {% else %}
+                                <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
+                                    <input type="hidden" name="pid" value="{{ purchase_info.payment_id }}" />
+                                    <input type="hidden" name="sid" value="{{ purchase_info.seller_id }}" />
+                                    <input type="hidden" name="success_url" value="{{ purchase_info.success_url }}" />
+                                    <input type="hidden" name="cancel_url" value="{{ purchase_info.cancel_url }}" />
+                                    <input type="hidden" name="error_url" value="{{ purchase_info.error_url }}" />
+                                    <input type="hidden" name="checksum" value="{{ purchase_info.checksum }}" />
+                                    <input type="hidden" name="amount" value="{{ purchase_info.amount }}" />
+                                    <input type="submit" class="btn btn-primary" value="Purchase" />
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            Please login to buy the game
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="generic">
                     <div class="description">Description</div>{{ game.description }}
                 </div>
                 <div class="generic">
-                    {% if user.is_authenticated %}
-                        {% if owned %}
-                            <a href="/game/{{ game.URL }}/play" class="btn btn-primary" role="button">Play the game!</a>
-                            Your best score:
-                        	{% for highscore in highscores %}
-                            	{% if highscore.user == user %}
-                                	<p> Score: {{ highscore.data }} Player: {{ user }} </p>
-                            	{% endif %}
-                        	{% endfor %}
-                        {% else %}
-                            <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
-                                <input type="hidden" name="pid" value="{{ purchase_info.payment_id }}" />
-                                <input type="hidden" name="sid" value="{{ purchase_info.seller_id }}" />
-                                <input type="hidden" name="success_url"
-                                    value="{{ purchase_info.success_url }}" />
-                                <input type="hidden" name="cancel_url"
-                                    value="{{ purchase_info.cancel_url }}" />
-                                <input type="hidden" name="error_url"
-                                    value="{{ purchase_info.error_url }}" />
-                                <input type="hidden" name="checksum"
-                                    value="{{ purchase_info.checksum }}" />
-                                <input type="hidden" name="amount" value="{{ purchase_info.amount }}" />
-                                <input type="submit" value="Purchase" class="btn" />
-                            </form>
-                        {% endif %}
-                    {% endif %}
-                    All-time-high scores:
+                    <div class="description">High scores</div>
                     {% for highscore in highscores %}
-                        <p> Score: {{ highscore.data }} Player: {{ highscore.user }} </p>
+                        Score: {{ highscore.data }} Player: {{ highscore.user }}<br>
                     {% endfor %}
+                    {% if owned %}
+                        <br>Your best score:<br>
+                        {% for highscore in highscores %}
+                            {% if highscore.user == user %}
+                                Score: {{ highscore.data }} Player: {{ user }}
+                            {% endif %}
+                        {% endfor %}    
+                    {% endif %}
                 </div>
             </div>
         </div>
