@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'game/([0-9a-zA-Z~.-_]+)/delete$', views.gameDeleteView),
     url(r'game/([0-9a-zA-Z~.-_]+)/edit$', views.gameEditView),
     url(r'^game/([0-9a-zA-Z~.-_]+)/play$', views.gamePlayView),
+    url(r'^game/([0-9a-zA-Z~.-_]+)/stats$', views.gameStatsAPIhandling),
     url(r'^game/([0-9a-zA-Z~.-_]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test)

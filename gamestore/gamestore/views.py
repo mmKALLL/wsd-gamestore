@@ -1,4 +1,4 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.core.exceptions import PermissionDenied
 from gamestore.models import *
@@ -100,8 +100,6 @@ def developerPage(request, user_name):
 					new_game_form = GameSubmissionForm()
 					game_editing_forms = []
 					for x in games:
-						#editing_form = GameEditingForm(data={'name': x.name, 'gameSource': x.gameSource,
-						#	'isPublic': x.isPublic, 'genre': x.genre, 'description': x.description, 'image': x.image, 'image2': x.image2, 'price': x.price})
 						editing_form = GameSubmissionForm(instance=x)
 						editing_form.fields['URL'].widget.attrs['readonly'] = True
 						#if editing_form.is_valid():
@@ -120,33 +118,6 @@ def developerPage(request, user_name):
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
 
-def gameDeleteView(request, viewURL):
-	if request.method == 'POST':
-		game = get_object_or_404(Game, URL=view_URL)
-		if game.developer == request.user:
-			game.delete()
-			return redirect('/developer/' + request.user.username)
-		else:
-			raise PermissionDenied
-	else:
-		raise PermissionDenied
-
-
-def gameEditView(request, view_URL):
-	if request.method == 'POST':
-		game = get_object_or_404(Game, URL=view_URL)
-		if game.developer == request.user:
-			form = GameEditingForm(data=request.POST, instance=game)
-			if form.is_valid():
-				form.save()
-				return redirect('/developer/' + request.user.username)
-			else:
-				return HttpResponse(form.errors)
-		else:
-			raise PermissionDenied
-	else:
-		raise PermissionDenied
-
 
 # TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
@@ -161,6 +132,7 @@ def gameView(request, view_URL):
 		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
 		if len(personalscores) >= 1:
 			playerscores.append(personalscores[0])
+
 	pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
 	
 	# If game was just purchased...
@@ -209,6 +181,54 @@ def gamePlayView(request, view_URL):
 			raise PermissionDenied
 	else:
 		return render(request, 'auth_required.html', {}) # TODO: 'last_page': 'game', 'game': game
+
+
+def gameDeleteView(request, viewURL):
+	if request.method == 'POST':
+		game = get_object_or_404(Game, URL=view_URL)
+		if game.developer == request.user:
+			game.delete()
+			return redirect('/developer/' + request.user.username)
+		else:
+			raise PermissionDenied
+	else:
+		raise PermissionDenied
+
+
+def gameEditView(request, view_URL):
+	if request.method == 'POST':
+		game = get_object_or_404(Game, URL=view_URL)
+		if game.developer == request.user:
+			form = GameEditingForm(data=request.POST, instance=game)
+			if form.is_valid():
+				form.save()
+				return redirect('/developer/' + request.user.username)
+			else:
+				return HttpResponse(form.errors)
+		else:
+			raise PermissionDenied
+	else:
+		raise PermissionDenied
+
+
+def gameStatsAPIhandling(request, view_URL):
+    if request.GET.get('format', '').lower == 'json' and request.GET.get('action', '').lower == 'highscores':
+        amount = int(request.GET.get('amount', '10'))
+        context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
+        scores = []
+        highscores = Highscore.objects.filter(game=game)
+	    players = User.objects.all()
+	    playerscores = []
+	    for player in players:
+	    	personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+	    	if len(personalscores) >= 1:
+	    		playerscores.append(personalscores[0])
+        playerscores = playerscores.sorted(key=lambda x: x.data.score)
+        
+        context.update({'scores': playerscores[:amount]})
+        return render(request, 'restful_stats.html', context)
+    else:
+        return HttpResponseBadRequest("Bad request to the API.")
 
 
 def gameList(request):
