@@ -55,7 +55,7 @@
                                                 <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img src="{{ game.image }}"><img src="{{ game.image2 }}">
                                             </div>
                                             <div class="gameinfo-right">
-                                                Released: {{ game.createDate }}<br>{{ game.price }} €
+                                                Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
                                             </div>
                                         </div>
                                         {% for edit_form in edit_forms %} <!--TODO: No alternative? -->
