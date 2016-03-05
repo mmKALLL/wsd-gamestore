@@ -150,49 +150,50 @@ def gameEditView(request, view_URL):
 
 # TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
-    user = request.user
-    game = get_object_or_404(Game, URL=view_URL)
-    owned = False
-    highscores = Highscore.objects.filter(game=game)
-    players = User.objects.all()
-    playerscores = []
-    for player in players:
-        personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
-        if len(personalscores) >= 1:
-            playerscores.append(personalscores[0])
-    pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
-    
-    # If game was just purchased...
-    if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
-        if request.GET.get('result', '') == 'success':
-            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'): # TODO: Raise PermissionDenied if hashes do not match
-                purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
-                purchasedgame.save()
-                request.user.userextension.ownedGames.add(purchasedgame)
-                request.user.save()
-                request.user.userextension.save()
-    
-    # The page itself
-    p_info = {}
-    if user.is_authenticated():
-        userext = get_object_or_404(UserExtension, user=user)
-        gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
-        if gameOwned: # TODO: Does not respect payment status (!!!)
-            owned = True
-        else:
-            p_info.update({
-                'payment_id': pid,
-                'seller_id': 'quagmire',
-                'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
-                'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
-                'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
-                'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
-                'amount': game.price,
-            })
-
-    context = {'user': user, 'game': game, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
-    return render(request, 'game.html', context)
-
+	user = request.user
+	game = get_object_or_404(Game, URL=view_URL)
+	owned = False
+	highscores = Highscore.objects.filter(game=game)
+	players = User.objects.all()
+	playerscores = []
+	for player in players:
+		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+		if len(personalscores) >= 1:
+			playerscores.append(personalscores[0])
+	pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
+	
+	# If game was just purchased...
+	if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
+		if request.GET.get('result', '') == 'success':
+			if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'): # TODO: Raise PermissionDenied if hashes do not match
+				purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
+				purchasedgame.save()
+				request.user.userextension.ownedGames.add(purchasedgame)
+				request.user.save()
+				request.user.userextension.save()
+	
+	# The page itself
+	p_info = {}
+	if user.is_authenticated():
+		userext = get_object_or_404(UserExtension, user=user)
+		gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
+		if gameOwned: # TODO: Does not respect payment status (!!!)
+			owned = True
+		else:
+			p_info.update({
+				'payment_id': pid,
+				'seller_id': 'quagmire',
+				'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
+				'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
+				'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
+				'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
+				'amount': game.price,
+			})
+	if game.isPublic or owned:
+		context = {'user': user, 'game': game, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
+		return render(request, 'game.html', context)
+	else:
+		raise PermissionDenied
 
 def gamePlayView(request, view_URL):
 	if request.user.is_authenticated():
