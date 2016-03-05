@@ -193,7 +193,7 @@ def gameView(request, view_URL):
 				'amount': game.price,
 			})
 	if game.isPublic or owned:
-		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: y.data), 'purchase_info': p_info}
+		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: -y.data), 'purchase_info': p_info}
 		return render(request, 'game.html', context)
 	else:
 		raise PermissionDenied
