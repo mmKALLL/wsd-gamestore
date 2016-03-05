@@ -17,7 +17,7 @@ GENRE_PUZZLE = 'Puzzle'
 GENRE_RACING = 'Racing'
 
 GAME_GENRES = (
-    (GENRE_UNSPECIFIED, 'Unspecified'),
+    (GENRE_UNSPECIFIED, 'Other'),
     (GENRE_ACTION, 'Action'),
     (GENRE_ADVENTURE, 'Adventure'),
     (GENRE_RPG, 'RPG'),

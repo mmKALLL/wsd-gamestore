@@ -142,37 +142,37 @@ def gameView(request, view_URL):
     user = request.user
     game = get_object_or_404(Game, URL=view_URL)
     owned = False
-    pid = md5(('user: ' + user.id + ', game: ' + game.id).encode('ascii'))
-    purchased_now = False
+    pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
     
     # If game was just purchased...
-    if request.pid && request.ref && request.result && request.checksum:
-        if request.result == 'success':
-            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.ref, 'success', PAYMENT_SECRET_KEY).encode('ascii')) == md5("pid={}&ref={}&result={}&token={}".format(request.pid, request.ref, request.result, PAYMENT_SECRET_KEY).encode('ascii')):
+    if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
+        if request.GET.get('result', '') == 'success':
+            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'): # TODO: PermissionDenied if hashes do not match
                 purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
+                purchasedgame.save()
                 request.user.userextension.ownedGames.add(purchasedgame)
-				request.user.save()
-				request.user.userextension.save()
-                purchased_now = True
+                request.user.save()
+                request.user.userextension.save()
     
     # The page itself
+    p_info = {}
     if user.is_authenticated():
         userext = get_object_or_404(UserExtension, user=user)
-        gameOwned = GamesOwned.objects.filter(game=game, userextension=userext) # TODO: Check if this works
-        if len(gameOwned) >= 1: # TODO: Does not respect payment status (!!!)
+        gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
+        if gameOwned: # TODO: Does not respect payment status (!!!)
             owned = True
         else:
-            p_info = {'purchase_info': {
-                'payment_id': pid, 
+            p_info.update({
+                'payment_id': pid,
                 'seller_id': 'quagmire',
                 'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
                 'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
                 'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
-                'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii'), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
+                'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
                 'amount': game.price,
-                }}
-            return render(request, 'game.html', context)
-    context = {'user': user, 'game': game, 'owned': owned, 'purchased_now': purchased_now}
+            })
+
+    context = {'user': user, 'game': game, 'owned': owned, 'purchase_info': p_info}
     return render(request, 'game.html', context)
 
 

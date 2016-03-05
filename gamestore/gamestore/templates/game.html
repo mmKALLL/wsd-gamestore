@@ -51,7 +51,7 @@
         		</div>
                 <div class="generic">
                     {% if user.is_authenticated %}
-                        {% if owned == True %}
+                        {% if owned %}
                             <a href="/game/{{ game.URL }}/play" class="btn btn-primary" role="button">Play the game!</a>
                         {% else %}
                             <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
