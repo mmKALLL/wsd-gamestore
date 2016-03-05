@@ -27,7 +27,7 @@ def register(request):
             user.save()
             userextension = UserExtension(user=user)
             userextension.save()
-            if user.email: # Email disabled because we don't have an SMTP backend.
+#            if user.email: # Email disabled because we don't have an SMTP backend.
 #                send_mail(
 #                    # Subject
 #                    'Validate your Quagmire Zone Underground account',
@@ -280,5 +280,6 @@ def test(request):
 	return render(request, 'test.html', {'users': users, 'games': games})
 
 
-
+def sameOrigin(request):
+    return render(request, 'sameorigin.html', {})
 
