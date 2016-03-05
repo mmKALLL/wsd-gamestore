@@ -8,6 +8,8 @@
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nosifer">
         <link rel="stylesheet" type="text/css" href="{% static 'quagmire.css' %}">
         <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     <body>
         <header>
@@ -33,58 +35,43 @@
         <div class="container">
             <div class="row">
                 <div class="generic name">{{ user.username }}'s developer page</div>
-                <div class="generic">Developer options?</div>
-                <div class="container">
-        	        <div class="row">
-        		        <div class="generic">
-        			        {% if user.is_authenticated %}
-                                {% if user.userextension.isDeveloper %}
-                                    This is the developer page, where you can add new games to Quagmire Zone Underground.
-                                    <form method="POST" action="/developer/{{ user.username }}">
-                                        {% csrf_token %}
-                                        {{ form.as_p }}
-                                        <input class="btn submit" type="submit" value="Submit game" />
-                                    </form>
-                                    <!-- TODO: Should this be in a spoiler-type hidden area that is expanded upon clicking "Add new game?" -->            			            
-                                    <!-- Add a list of created games here. -->
-                                    List of games created by you:
-                                    (in progress; remember settings
-                                    {% for game, editform in gameforms %}
-                                            <!--  -->
-
-                                            <form method="POST" action="/game/{{ game.URL }}/edit">
-                                                {% csrf_token %}
-                                                {{ editform.as_p }}
-                                                <input class="btn submit" type="submit" value="Edit game" />
-                                            </form>
-
-                                        SOLD GAMES:
+                    {% for game, editform in gameforms %}<!-- TODO: Should this be in a spoiler-type hidden area that is expanded upon clicking "Add new game?" -->
+                        <div class="gameinfo">
+                            <div class="gameinfo-left">
+                                <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img class="resize" src="{{ game.image }}"><img class="resize image-secondary" src="{{ game.image2 }}">
+                            </div>
+                            <div class="gameinfo-right">
+                                {{ game.genre }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>Price: {{ game.price }} €<br><a class="btn submit collapser" data-toggle="collapse" data-target="#edit-{{ game.URL }}">Edit game</a>
+                            </div>
+                            SOLD GAMES:
 
                                         {% for boughtgame in boughtgames %}
                                             {% if boughtgame.game == game %}
                                                 <p> Time: {{boughtgame.createDate}} </p>
                                             {% endif %}
                                         {% endfor %}
-                                        
-                                        <div class="gameinfo">
-                                            <div class="gameinfo-left">
-                                                <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img class="resize" src="{{ game.image }}"><img class="resize image-secondary" src="{{ game.image2 }}">
-                                            </div>
-                                            <div class="gameinfo-right">
-                                                Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
-                                            </div>
-                                        </div>
-                                        <!--{% for edit_form in edit_forms %} --> <!--TODO: No alternative? -->lololo
-                                        <!--   {% if game.gameSource == edit_form.gameSource %} --> jee
-                                        <!--    {% endif %}
-                                        {% endfor %} -->
-                                    {% endfor %}
-                                {% else %} <!-- TODO: Remove this note? -->
-                                    Unfortunately, you do not have the permission to view our developer page. You can become one after reading our <a href="developerinfo" target="/">info page</a>.
-                                {% endif %}
-            		        {% endif %}
-            	        </div>
-                    </div>
+                            <div id="edit-{{ game.URL }}" class="edit collapse">
+                                <br>
+                                <form method="POST" action="/game/{{ game.URL }}/edit">
+                                    {% csrf_token %}
+                                    {{ editform.as_p }}
+                                    <input class="btn submit" type="submit" value="Save changes" />
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% if user.is_authenticated %}
+                        {% if user.userextension.isDeveloper %}
+                            <div class="generic">
+                                <div class="description">Add a new game to Quagmire Zone Underground.</div>
+                                <form method="POST" action="/developer/{{ user.username }}">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    Images larger than 344 pixels in width or height will be scaled accordingly. We also strongly recommend that the game source URL contains NOTHING but the game.<br><br>
+                                    <input class="btn submit" type="submit" value="Add game" />
+                                </form>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>

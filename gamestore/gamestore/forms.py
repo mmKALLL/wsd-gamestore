@@ -26,9 +26,9 @@ class GameSubmissionForm(ModelForm):
         
         fields = ['name', 'URL', 'gameSource', 'genre', 'description', 'price', 'image', 'image2', 'isPublic']
         widgets = {
-            'name': TextInput(attrs={'size': 46}),
-            'URL': TextInput(attrs={'size': 34}),
-            'gameSource': URLInput(attrs={'size': 40}),
+            'name': TextInput(attrs={'size': 40}),
+            'URL': TextInput(attrs={'size': 28}),
+            'gameSource': URLInput(attrs={'size': 34}),
             'description': Textarea(attrs={'rows': 10}),
             'image': URLInput(attrs={'size': 40}),
             'image2': URLInput(attrs={'size': 40}),

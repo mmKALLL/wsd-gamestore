@@ -217,24 +217,24 @@ def gameEditView(request, view_URL):
 
 
 def gameStatsAPIhandling(request, view_URL):
-	if request.GET.get('format', '').lower == 'json' and request.GET.get('action', '').lower == 'highscores':
-		amount = int(request.GET.get('amount', '10'))
-		context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
-		scores = []
-		highscores = Highscore.objects.filter(game=game)
-		players = User.objects.all()
-		playerscores = []
-		for player in players:
-			personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
-			if len(personalscores) >= 1:
-				playerscores.append(personalscores[0])
-		playerscores = playerscores.sorted(key=lambda x: x.data.score)
-		
-		context.update({'scores': playerscores[:amount]})
-		return render(request, 'restful_stats.html', context)
-	else:
-		return HttpResponseBadRequest("Bad request to the API.")
+    if request.GET.get('format', '').lower() == 'json' and request.GET.get('action', '').lower() == 'highscores':
+        amount = int(request.GET.get('amount', '10'))
+        context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
+        scores = []
+        game = get_object_or_404(Game, URL=view_URL)
+        highscores = Highscore.objects.filter(game=game)
+        players = User.objects.all()
+        playerscores = []
+        for player in players:
+            personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+            if len(personalscores) >= 1:
+                playerscores.append(personalscores[0])
+        playerscores = sorted(playerscores, key=lambda x: x.data.score) # TODO: Might break on highscores
 
+        context.update({'scores': playerscores[:amount]})
+        return render(request, 'restful_stats.html', context)
+    else:
+        return HttpResponseBadRequest("Bad request to the API.")
 
 def gameList(request):
 	user = request.user
