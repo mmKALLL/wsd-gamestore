@@ -35,7 +35,9 @@
         <div class="container">
             <div class="row">
                 <div class="generic name">{{ user.username }}</div>
-                <div class="generic">Owned games?
+                {% if games|length == 0 %}
+                    <div class="generic">You don't own any games.</div>
+                {% else %}
                     {% for game in games %}
                         <div class="gameinfo">
                             <div class="gameinfo-left">
@@ -46,6 +48,8 @@
                             </div>
                         </div>
                     {% endfor %}
+                {% endif %}
+                <div class="generic">
                     <form method="POST" action="/user/{{ user.username }}">
                         {% csrf_token %}
                         {{ form.as_p }}
@@ -54,6 +58,6 @@
                 </div>
             </div>
         </div>
-        <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
+        <footer class="footer">&copy; 2016 Quagmire Zone Underground. All rights reserved.<br><a href="mailto:vskatshuma@gmail.com">Contact us</a> | Become a <a href="/developerinfo">developer</a></footer>
     </body>
 </html>
