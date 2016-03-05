@@ -136,7 +136,7 @@ def gameView(request, view_URL):
 	players = User.objects.all()
 	playerscores = []
 	for player in players:
-		personalscores = sorted(highscores.filter(user=user), key=lambda x: x.data.score)
+		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
 		if len(personalscores)>=1:
 			playerscores.append(personalscores[0])
 	if request.user.is_authenticated():
