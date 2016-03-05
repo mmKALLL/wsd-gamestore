@@ -87,7 +87,18 @@ def developerPage(request, user_name):
 					developer = get_object_or_404(User, pk=request.user.id)
 					games = Game.objects.filter(developer=developer)  
 					new_game_form = GameSubmissionForm()
-					context = {'user': developer, 'games': games, 'form': new_game_form}
+					game_editing_forms = []
+					for x in games:
+						#editing_form = GameEditingForm(data={'name': x.name, 'gameSource': x.gameSource,
+						#	'isPublic': x.isPublic, 'genre': x.genre, 'description': x.description, 'image': x.image, 'image2': x.image2, 'price': x.price})
+						editing_form = GameSubmissionForm(instance=x)
+						editing_form.fields['URL'].widget.attrs['readonly'] = True
+						#if editing_form.is_valid():
+						game_editing_forms.append(editing_form)
+						#else:
+						#	return HttpResponse(editing_form.errors)
+					gameforms = zip(games, game_editing_forms)
+					context = {'user': developer, 'games': games, 'form': new_game_form, 'editforms': game_editing_forms, 'gameforms': gameforms}
 					return render(request, 'developer_page.html', context)
 			else:
 				return redirect('/developerinfo')
@@ -110,11 +121,11 @@ def gameDeleteView(request, viewURL):
 		raise PermissionDenied
 
 
-def gameEditView(request, viewURL):
+def gameEditView(request, view_URL):
 	if request.method == 'POST':
 		game = get_object_or_404(Game, URL=view_URL)
 		if game.developer == request.user:
-			form = GameSubmissionForm(data=request.POST, instance=game)
+			form = GameEditingForm(data=request.POST, instance=game)
 			if form.is_valid():
 				form.save()
 				return redirect('/developer/' + request.user.username)
