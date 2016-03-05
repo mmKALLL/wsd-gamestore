@@ -80,9 +80,9 @@
                     {% if owned %}
                         <br>Your best score:<br>
                         {% for highscore in highscores %}
-                            {% if highscore.user == user %}
-                                Score: {{ highscore.data }} Player: {{ user }}
-                            {% endif %}
+                            
+                               <p> Score: {{ highscore.data }} Player: {{ user }} </p>
+                            
                         {% endfor %}    
                     {% endif %}
                 </div>

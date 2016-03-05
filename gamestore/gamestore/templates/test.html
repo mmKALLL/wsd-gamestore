@@ -28,6 +28,9 @@
             <p> {{game.name}} </p>
             <p> {{game.URL}} </p>
             {% endfor %}
+            {% for score in highscores %}
+            <p> {{score.data}} </p>
+            {% endfor %}
         </div>
         <footer>
 	        &copy; Quagmire Zone Underground, 2016

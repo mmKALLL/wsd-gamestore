@@ -158,7 +158,7 @@ def gameView(request, view_URL):
 	players = User.objects.all()
 	playerscores = []
 	for player in players:
-		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data)
 		if len(personalscores) >= 1:
 			playerscores.append(personalscores[0])
 
@@ -193,7 +193,7 @@ def gameView(request, view_URL):
 				'amount': game.price,
 			})
 	if game.isPublic or owned:
-		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
+		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: y.data), 'purchase_info': p_info}
 		return render(request, 'game.html', context)
 	else:
 		raise PermissionDenied
@@ -277,7 +277,8 @@ def gameList(request):
 def test(request):
 	users = User.objects.all()
 	games = Game.objects.all()
-	return render(request, 'test.html', {'users': users, 'games': games})
+	highscores = Highscore.objects.all()
+	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores})
 
 def postScore(request):
 	data = json.loads(request.body.decode('UTF-8'))
@@ -286,7 +287,7 @@ def postScore(request):
 	game = get_object_or_404(Game, URL=game_id)
 	user = request.user
 
-	highscore = Highscores.objects.filter(user=user, game=game)
+	highscore = Highscore.objects.filter(user=user, game=game)
 
 	if len(highscore)>0:
 		if highscore[0].data < score:
