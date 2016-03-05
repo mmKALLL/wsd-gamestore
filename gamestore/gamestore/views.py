@@ -97,7 +97,11 @@ def developerPage(request, user_name):
 				else:					
 					developer = get_object_or_404(User, pk=request.user.id)
 					games = Game.objects.filter(developer=developer) 
-					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)  
+					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)
+					boughtGames = []
+					for boughtGame in sorted(gamesBought, key=lambda x: (x.game.name, x.createDate)):
+						if boughtGame.game in games:
+							boughtGames.append(boughtGame)
 					new_game_form = GameSubmissionForm()
 					game_editing_forms = []
 					for x in games:
@@ -108,7 +112,7 @@ def developerPage(request, user_name):
 						#else:
 						#	return HttpResponse(editing_form.errors)
 					gameforms = zip(games, game_editing_forms)
-					context = {'user': developer, 'games': games, 'form': new_game_form, 'editforms': game_editing_forms, 'gameforms': gameforms}
+					context = {'user': developer, 'games': games, 'form': new_game_form, 'editforms': game_editing_forms, 'gameforms': gameforms, 'boughtgames': boughtGames}
 					return render(request, 'developer_page.html', context)
 			else:
 				return redirect('/developerinfo')
@@ -213,23 +217,23 @@ def gameEditView(request, view_URL):
 
 
 def gameStatsAPIhandling(request, view_URL):
-    if request.GET.get('format', '').lower == 'json' and request.GET.get('action', '').lower == 'highscores':
-        amount = int(request.GET.get('amount', '10'))
-        context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
-        scores = []
-        highscores = Highscore.objects.filter(game=game)
-	    players = User.objects.all()
-	    playerscores = []
-	    for player in players:
-	    	personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
-	    	if len(personalscores) >= 1:
-	    		playerscores.append(personalscores[0])
-        playerscores = playerscores.sorted(key=lambda x: x.data.score)
-        
-        context.update({'scores': playerscores[:amount]})
-        return render(request, 'restful_stats.html', context)
-    else:
-        return HttpResponseBadRequest("Bad request to the API.")
+	if request.GET.get('format', '').lower == 'json' and request.GET.get('action', '').lower == 'highscores':
+		amount = int(request.GET.get('amount', '10'))
+		context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
+		scores = []
+		highscores = Highscore.objects.filter(game=game)
+		players = User.objects.all()
+		playerscores = []
+		for player in players:
+			personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+			if len(personalscores) >= 1:
+				playerscores.append(personalscores[0])
+		playerscores = playerscores.sorted(key=lambda x: x.data.score)
+		
+		context.update({'scores': playerscores[:amount]})
+		return render(request, 'restful_stats.html', context)
+	else:
+		return HttpResponseBadRequest("Bad request to the API.")
 
 
 def gameList(request):

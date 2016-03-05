@@ -57,6 +57,14 @@
                                                 {{ editform.as_p }}
                                                 <input class="btn submit" type="submit" value="Edit game" />
                                             </form>
+
+                                        SOLD GAMES:
+
+                                        {% for boughtgame in boughtgames %}
+                                            {% if boughtgame.game == game %}
+                                                <p> Time: {{boughtgame.createDate}} </p>
+                                            {% endif %}
+                                        {% endfor %}
                                         
                                         <div class="gameinfo">
                                             <div class="gameinfo-left">
