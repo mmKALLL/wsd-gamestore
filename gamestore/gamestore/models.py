@@ -70,7 +70,7 @@ class GameSave(models.Model):
         on_delete=models.CASCADE)
     
 class Highscore(models.Model):
-    data = models.TextField() # Score in JSON format.
+    data = models.IntegerField(blank=False, null=False) # Score in JSON format.
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE)

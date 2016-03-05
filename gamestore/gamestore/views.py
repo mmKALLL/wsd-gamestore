@@ -1,4 +1,4 @@
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
+from django.http import HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
@@ -6,6 +6,7 @@ from gamestore.models import *
 from django.contrib.auth.models import User
 from gamestore.forms import *
 from hashlib import md5
+import json
 PAYMENT_SECRET_KEY = 'ed1c50ac3b75bd1aa70835c8c84007ed'
 
 
@@ -279,6 +280,25 @@ def test(request):
 	games = Game.objects.all()
 	return render(request, 'test.html', {'users': users, 'games': games})
 
+def postScore(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	score = int(data['score'])
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
 
+	highscore = Highscores.objects.filter(user=user, game=game)
+
+	if len(highscore)>0:
+		if highscore[0].data < score:
+			highscore[0].data = score
+			highscore[0].save()
+	else:
+		highscore = Highscore(game=game, user=user, data=score)
+		highscore.save()
+	context = {'message': 'Score saved succesfully!'}
+	return JsonResponse(context)
+
+	
 
 

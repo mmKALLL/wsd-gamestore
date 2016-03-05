@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/stats$', views.gameStatsAPIhandling),
     url(r'^game/([0-9a-zA-Z~\.\-_]+)$', views.gameView), # TODO: Change number to the name of the game
     url(r'^gamelist$', views.gameList),
-    url(r'^test$', views.test)
+    url(r'^test$', views.test),
+    url(r'^post_score$', views.postScore, name='post_score')
 ]
