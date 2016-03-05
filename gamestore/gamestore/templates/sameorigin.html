@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="author" content="VsKatshuma" />
+        <meta name="viewport" content="initial-scale=1" />
+        <meta name="keywords" content="Sphere, Katshuma, VsKatshuma, Terrain">
+        <title>Sphere - Terrain</title>
+        <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css' />
+    </head>
+    <body>
+        <canvas id="canvas" width="906" height="604">
+            Your browser does not support HTML5 &lt;canvas&gt;.
+        </canvas>
+        <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+        <script>
+            WebFont.load({
+                google: {
+                    families: ['Yantramanav:300']
+                },
+                active: function () {
+                    var script = document.createElement('script');
+                    script.src = "{% static 'terrain.js' %}";
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                }
+            });
+        </script>
+    </body>
+</html>

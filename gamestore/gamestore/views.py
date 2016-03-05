@@ -28,18 +28,18 @@ def register(request):
             user.save()
             userextension = UserExtension(user=user)
             userextension.save()
-            if user.email:
-                send_mail(
-                    # Subject
-                    'Validate your Quagmire Zone Underground account', 
-                    # Message                
-                    'Hi, and thank you for joining Quagmire Zone Underground.\n\nPlease use the following URL to validate your account.\n\nhttp://localhost:8000/user/' + user.username + '/validate?key=' + md5(str(user.id).encode('ascii')).hexdigest() + '\n\nThis message is safe to ignore if you received by error. Please do not share the link with anyone.\n\nBest Regards,\nQuagmire Zone Underground',
-                    # Sender
-                    'no-reply@quagmire.com',
-                    # Recipients
-                    [user.email],
-                    # Fail silently?
-                    fail_silently=False)
+#            if user.email: # Email disabled because we don't have an SMTP backend.
+#                send_mail(
+#                    # Subject
+#                    'Validate your Quagmire Zone Underground account',
+#                    # Message
+#                    'Hi, and thank you for joining Quagmire Zone Underground.\n\nPlease use the following URL to validate your account.\n\nhttp://localhost:8000/user/' + user.username + '/validate?key=' + md5(str(user.id).encode('ascii')).hexdigest() + '\n\nThis message is safe to ignore if you received by error. Please do not share the link with anyone.\n\nBest Regards,\nQuagmire Zone Underground',
+#                    # Sender
+#                    'no-reply@quagmire.com',
+#                    # Recipients
+#                    [user.email],
+#                    # Fail silently?
+#                    fail_silently=False)
             return redirect(index)
     else:
         user_form = UserForm()
@@ -119,7 +119,7 @@ def developerPage(request, user_name):
 					else:
 						return HttpResponse(new_game_form.errors)
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
-				else:					
+				else:
 					developer = get_object_or_404(User, pk=request.user.id)
 					games = Game.objects.filter(developer=developer) 
 					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)
@@ -149,7 +149,6 @@ def developerPage(request, user_name):
 
 
 
-# TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
 	user = request.user
 	game = get_object_or_404(Game, URL=view_URL)
@@ -289,6 +288,7 @@ def postScore(request):
 
 	highscore = Highscores.objects.filter(user=user, game=game)
 
+<<<<<<< HEAD
 	if len(highscore)>0:
 		if highscore[0].data < score:
 			highscore[0].data = score
@@ -301,4 +301,8 @@ def postScore(request):
 
 	
 
+=======
+def sameOrigin(request):
+    return render(request, 'sameorigin.html', {})
+>>>>>>> 99a2c0ea2966d0191dc0ecf224355a0cde7d042d
 

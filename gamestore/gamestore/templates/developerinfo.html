@@ -41,10 +41,13 @@
                 </div>
             </nav>
         </header>
-        some description here
         <div class="container">
             <div class="row">
+                <div class="generic"><div class="description">Developer information</div></div>
                 <div class="generic">
+                    {% if user.userextension.isDeveloper == False or user.is_authenticated == False %}
+                        By becoming a Quagmire Zone Underground developer, you get to add your games to our service and price them. Other users of our site can then buy your games and play them. Quagmire Zone Underground offers its developers built-in tools to add and manage their games. We also track sales statistics for every game in our system.<br><br>
+                    {% endif %}
                     {% if user.is_authenticated %}
                         {% if user.userextension.isDeveloper == False %}
                             <form method="POST" action="/developerinfo">
@@ -52,9 +55,10 @@
                             <input class="btn submit" type="submit" value="Become a developer now!" />
                             </form>
                         {% else %}
-                            You are a developer on our fantastic site! Congratulations!
-                            You can access your developer page by clicking the button in the header.
+                            You are a Quagmire Zone Underground developer! You can access your developer page by clicking the green button in the header.
                         {% endif %}
+                    {% else %}
+                        You have to be logged in to become a developer.
                     {% endif %}
                 </div>
             </div>

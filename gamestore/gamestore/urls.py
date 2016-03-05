@@ -28,12 +28,16 @@ urlpatterns = [
     url(r'^user/([0-9a-zA-Z@\.+\-_]+)$', views.userPage),
     url(r'^developerinfo$', views.developerInfoPage),
     url(r'^developer/([0-9a-zA-Z@\.+\-_]+)$', views.developerPage),
-    url(r'game/([0-9a-zA-Z~\.\-_]+)/delete$', views.gameDeleteView),
-    url(r'game/([0-9a-zA-Z~\.\-_]+)/edit$', views.gameEditView),
+    url(r'^game/([0-9a-zA-Z~\.\-_]+)/delete$', views.gameDeleteView),
+    url(r'^game/([0-9a-zA-Z~\.\-_]+)/edit$', views.gameEditView),
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/play$', views.gamePlayView),
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/stats$', views.gameStatsAPIhandling),
-    url(r'^game/([0-9a-zA-Z~\.\-_]+)$', views.gameView), # TODO: Change number to the name of the game
+    url(r'^game/([0-9a-zA-Z~\.\-_]+)$', views.gameView),
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test),
+<<<<<<< HEAD
     url(r'^post_score$', views.postScore, name='post_score')
+=======
+    url(r'^sameorigin$', views.sameOrigin)
+>>>>>>> 99a2c0ea2966d0191dc0ecf224355a0cde7d042d
 ]
