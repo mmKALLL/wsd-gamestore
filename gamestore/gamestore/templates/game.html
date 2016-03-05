@@ -56,9 +56,17 @@
                         {% else %}
                             here shall be the link to payment service 
                         {% endif %}
-                    your best score
+                    	Your best score:
+                    	{% for highscore in highscores %}
+                    		{% if highscore.user == user %}
+                    			<p> Score: {{highscore.data}} Player: {{user}} </p>
+                    		{% endif %}
+                    	{% endfor %}
                     {% endif %}
-                    highscores list
+                    All-time-high scores:
+                    {% for highscore in highscores %}
+                    	<p> Score: {{highscore.data}} Player: {{highscore.user}} </p>
+                    {% endfor %}
                 </div>
             </div>
         </div>

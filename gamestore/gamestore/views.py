@@ -132,11 +132,18 @@ def gameView(request, view_URL):
 	user = request.user
 	game = get_object_or_404(Game, URL=view_URL)
 	owned = False
-	if user.is_authenticated:
+	highscores = Highscore.objects.filter(game=game)
+	players = User.objects.all()
+	playerscores = []
+	for player in players:
+		personalscores = sorted(highscores.filter(user=user), key=lambda x: x.data.score)
+		if len(personalscores)>=1:
+			playerscores.append(personalscores[0])
+	if request.user.is_authenticated:
 		userext = get_object_or_404(UserExtension, user=user)
 		if len(GamesOwned.objects.filter(game=game, userextension=userext)) >= 1: # TODO: Check if this works
 			owned = True
-	context = {'user': user, 'game': game, 'owned': owned}
+	context = {'user': user, 'game': game, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score)}
 	return render(request, 'game.html', context)
 
 def gamePlayView(request, view_URL):
