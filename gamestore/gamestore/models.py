@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 class UserExtension(models.Model):
     user = models.OneToOneField(
@@ -8,37 +9,53 @@ class UserExtension(models.Model):
         parent_link=False)
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField('GamesOwned')
-    
-GENRE_UNSPECIFIED = 'Other'
+
 GENRE_ACTION = 'Action'
 GENRE_ADVENTURE = 'Adventure'
-GENRE_RPG = 'RPG'
+GENRE_FIGHTING = 'Fighting'
+GENRE_MULTIPLAYER = 'Multiplayer'
+GENRE_PLATFORM = 'Platform'
 GENRE_PUZZLE = 'Puzzle'
 GENRE_RACING = 'Racing'
+GENRE_RPG = 'RPG'
+GENRE_SHOOTER = 'Shooter'
+GENRE_SIMULATION = 'Simulation'
+GENRE_SPORTS = 'Sports'
+GENRE_STRATEGY = 'Strategy'
+GENRE_UNSPECIFIED = 'Other'
 
 GAME_GENRES = (
-    (GENRE_UNSPECIFIED, 'Unspecified'),
     (GENRE_ACTION, 'Action'),
     (GENRE_ADVENTURE, 'Adventure'),
-    (GENRE_RPG, 'RPG'),
+    (GENRE_FIGHTING, 'Fighting'),
+    (GENRE_MULTIPLAYER, 'Multiplayer'),
+    (GENRE_PLATFORM, 'Platform'),
     (GENRE_PUZZLE, 'Puzzle'),
     (GENRE_RACING, 'Racing'),
+    (GENRE_RPG, 'RPG'),
+    (GENRE_SHOOTER, 'Shooter'),
+    (GENRE_SIMULATION, 'Simulation'),
+    (GENRE_SPORTS, 'Sports'),
+    (GENRE_STRATEGY, 'Strategy'),
+    (GENRE_UNSPECIFIED, 'Other'),
 )
 
+URLAllowedChars = RegexValidator(r'^[0-9a-zA-Z~\.\-_]+$', 'Only alphanumeric characters and ~/./-/_ are allowed.')
+
 class Game(models.Model):
-    name = models.CharField(max_length=80)
-    URL = models.CharField(max_length=150, unique=True)
-    gameSource = models.URLField(max_length=300, unique=True, blank=True)
-    isPublic = models.BooleanField(default=False)
+    name = models.CharField(max_length=80, verbose_name='game name')
+    URL = models.CharField(max_length=150, unique=True, validators=[URLAllowedChars], verbose_name='game path (on our site)')
+    gameSource = models.URLField(max_length=300, unique=True, verbose_name='game source URL')
+    isPublic = models.BooleanField(default=False, verbose_name='is the game public? (You can always change this later)')
     genre = models.CharField(max_length=30, default=GENRE_UNSPECIFIED, choices=GAME_GENRES)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
-    image = models.URLField(blank=True)
-    image2 = models.URLField(blank=True)
+    image = models.URLField(blank=True, verbose_name='URL to image of game')
+    image2 = models.URLField(blank=True, verbose_name='secondary image URL')
     developer = models.ForeignKey(
         User, 
         on_delete=models.SET_NULL, 
         null=True)
-    price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    price = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='price (€)')
     createDate = models.DateTimeField(auto_now_add=True, null=True)
     updateDate = models.DateTimeField(auto_now=True, null=True) # TODO: Not sure if works.
     

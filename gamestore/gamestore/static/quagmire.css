@@ -11,6 +11,15 @@ input {
 	background-color: #1B2838;
 }
 
+select {
+	background-color: #1B2838;
+}
+
+textarea {
+	background-color: #1B2838;
+	width: 100%;
+}
+
 .submit {
 	background-color: #000000;
 	border: 1px solid #A0A0A0;
@@ -91,6 +100,24 @@ header {
 	float: right;
 }
 
+.resize {
+	max-width: 344px;
+	max-height: 344px;
+	margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+
+	.image-secondary {
+		display: none;
+	}
+
+}
+
+.success {
+	color: #88FF88;
+}
+
 .generic {
 	background-color: #273B52;
 	border: 1px solid #337AB7;
@@ -98,13 +125,24 @@ header {
 	padding: 12px;
 }
 
-.username {
+.name {
+	font-size: 30px;
+	color: #66A4DF;
+}
+
+.description {
 	font-size: 24px;
 	color: #66A4DF;
+	margin-bottom: 6px;
+}
+
+.btn-block {
+	margin-bottom: 12px;
 }
 
 footer {
 	width: 100%;
 	text-align: center;
-	margin: 6px 0;
+	font-size: 12px;
+	margin-bottom: 12px;
 }

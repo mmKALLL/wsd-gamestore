@@ -43,16 +43,25 @@
         </header>
         <div class="container">
             <div class="row">
-        		<div class="generic">
-            		<img src="{{ game.image }}"><img src="{{ game.image2 }}"><br>{{ game.name }}<br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
-        		</div>
-        		<div class="generic">
-            		{{ game.description }}
-        		</div>
+                {% if purchased_now %}
+                    <div class="generic success">You have successfully purchased {{ game.name }}! You can now play the game!</div>
+                {% endif %}
+                <div class="generic">
+                    <div class="name">{{ game.name }}</div><img class="resize" src="{{ game.image }}"><img class="resize" src="{{ game.image2 }}"><br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
+                </div>
+                <div class="generic">
+                    <div class="description">Description</div>{{ game.description }}
+                </div>
                 <div class="generic">
                     {% if user.is_authenticated %}
-                        {% if owned == True %}
+                        {% if owned %}
                             <a href="/game/{{ game.URL }}/play" class="btn btn-primary" role="button">Play the game!</a>
+                            Your best score:
+                        	{% for highscore in highscores %}
+                            	{% if highscore.user == user %}
+                                	<p> Score: {{ highscore.data }} Player: {{ user }} </p>
+                            	{% endif %}
+                        	{% endfor %}
                         {% else %}
                             <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
                                 <input type="hidden" name="pid" value="{{ purchase_info.payment_id }}" />
@@ -69,12 +78,14 @@
                                 <input type="submit" value="Purchase" class="btn" />
                             </form>
                         {% endif %}
-                    your best score<br>
                     {% endif %}
-                    highscores list
+                    All-time-high scores:
+                    {% for highscore in highscores %}
+                        <p> Score: {{ highscore.data }} Player: {{ highscore.user }} </p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
+        <footer class="footer">&copy; 2016 Quagmire Zone Underground. All rights reserved.<br><a href="mailto:vskatshuma@gmail.com">Contact us</a> | Become a <a href="/developerinfo">developer</a></footer>
     </body>
 </html>
