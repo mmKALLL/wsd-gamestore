@@ -5,6 +5,8 @@ from gamestore.models import *
 from django.contrib.auth.models import User
 from gamestore.forms import *
 from hashlib import md5
+PAYMENT_SECRET_KEY = 'ed1c50ac3b75bd1aa70835c8c84007ed'
+
 
 def index(request):
 	games = Game.objects.filter(isPublic=True)
@@ -13,6 +15,7 @@ def index(request):
 	else:
 		games = sorted(games, key=lambda x: x.createDate, reverse=True)
 		return render(request, 'front_page.html', {'games': games[:4]})
+
 
 def register(request):
 	if request.method == 'POST':
@@ -28,6 +31,7 @@ def register(request):
 		user_form = UserForm()
 	return render(request, 'register.html', {'form': user_form})
 
+
 def userPage(request, user_name):
 	if request.user.is_authenticated():
 		if request.user.username == user_name:
@@ -41,6 +45,7 @@ def userPage(request, user_name):
 			raise PermissionDenied
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
+
 
 def developerInfoPage(request):
 	if request.method == 'POST':
@@ -56,8 +61,8 @@ def developerInfoPage(request):
 		return render(request, 'developerinfo.html', {})
 
 
-def developerPage(request, user_name):
 
+def developerPage(request, user_name):
 	if request.user.is_authenticated():
 		if request.user.username == user_name:
 			if request.user.userextension.isDeveloper == True:
@@ -92,6 +97,7 @@ def developerPage(request, user_name):
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
+
 def gameDeleteView(request, viewURL):
 	if request.method == 'POST':
 		game = get_object_or_404(Game, URL=view_URL)
@@ -102,6 +108,7 @@ def gameDeleteView(request, viewURL):
 			raise PermissionDenied
 	else:
 		raise PermissionDenied
+
 
 def gameEditView(request, viewURL):
 	if request.method == 'POST':
@@ -118,20 +125,45 @@ def gameEditView(request, viewURL):
 	else:
 		raise PermissionDenied
 
+
+# TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
-	user = request.user
-	game = get_object_or_404(Game, URL=view_URL)
-	owned = False
-	if user.is_authenticated:
-		userext = get_object_or_404(UserExtension, user=user)
+    user = request.user
+    game = get_object_or_404(Game, URL=view_URL)
+    owned = False
+    pid = md5(('user: ' + user.id + ', game: ' + game.id).encode('ascii'))
+    purchased_now = False
+    
+    # If game was just purchased...
+    if request.pid && request.ref && request.result && request.checksum:
+        if request.result == 'success':
+            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.ref, 'success', PAYMENT_SECRET_KEY).encode('ascii')) == md5("pid={}&ref={}&result={}&token={}".format(request.pid, request.ref, request.result, PAYMENT_SECRET_KEY).encode('ascii')):
+                purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
+                request.user.userextension.ownedGames.add(purchasedgame)
+				request.user.save()
+				request.user.userextension.save()
+                purchased_now = True
+    
+    # The page itself
+    if user.is_authenticated():
+        userext = get_object_or_404(UserExtension, user=user)
         gameOwned = GamesOwned.objects.filter(game=game, userextension=userext) # TODO: Check if this works
-		if len(gameOwned) >= 1: # TODO: Does not respect payment status (!!!)
-			owned = True
+        if len(gameOwned) >= 1: # TODO: Does not respect payment status (!!!)
+            owned = True
         else:
-            context = {'purchase_info': {'payment_id': md5(('user: ' + user.id + ', game: ' + game.id).encode('ascii')), }}
+            p_info = {'purchase_info': {
+                'payment_id': pid, 
+                'seller_id': 'quagmire',
+                'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
+                'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
+                'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
+                'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii'), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
+                'amount': game.price,
+                }}
             return render(request, 'game.html', context)
-	context = {'user': user, 'game': game, 'owned': owned}
-	return render(request, 'game.html', context)
+    context = {'user': user, 'game': game, 'owned': owned, 'purchased_now': purchased_now}
+    return render(request, 'game.html', context)
+
 
 def gamePlayView(request, view_URL):
 	if request.user.is_authenticated():
@@ -140,6 +172,7 @@ def gamePlayView(request, view_URL):
 		return render(request, 'game_play.html', context)
 	else:
 		return render(request, 'auth_required.html', {'last_page': 'game', 'game': game})
+
 
 def gameList(request):
 	user = request.user
@@ -154,7 +187,12 @@ def gameList(request):
 		context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'genres': sorted(genres)}
 	return render(request, 'game_list.html', context)
 
+
 def test(request):
 	users = User.objects.all()
 	games = Game.objects.all()
 	return render(request, 'test.html', {'users': users, 'games': games})
+
+
+
+
