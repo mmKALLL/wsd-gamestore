@@ -96,7 +96,8 @@ def developerPage(request, user_name):
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:					
 					developer = get_object_or_404(User, pk=request.user.id)
-					games = Game.objects.filter(developer=developer)  
+					games = Game.objects.filter(developer=developer) 
+					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)  
 					new_game_form = GameSubmissionForm()
 					game_editing_forms = []
 					for x in games:
