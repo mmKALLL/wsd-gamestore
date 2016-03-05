@@ -132,6 +132,7 @@ def gameView(request, view_URL):
 		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
 		if len(personalscores) >= 1:
 			playerscores.append(personalscores[0])
+
 	pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
 	
 	# If game was just purchased...
@@ -215,11 +216,20 @@ def gameStatsAPIhandling(request, view_URL):
         amount = int(request.GET.get('amount', '10'))
         context = {'action': 'highscores', 'format': 'JSON', 'amount': amount}
         scores = []
+        highscores = Highscore.objects.filter(game=game)
+	    players = User.objects.all()
+	    playerscores = []
+	    for player in players:
+	    	personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+	    	if len(personalscores) >= 1:
+	    		playerscores.append(personalscores[0])
+        playerscores = playerscores.sorted(key=lambda x: x.data.score)
         
-        context.update({'scores': scores})
+        context.update({'scores': playerscores[:amount]})
         return render(request, 'restful_stats.html', context)
     else:
         return HttpResponseBadRequest("Bad request to the API.")
+
 
 def gameList(request):
 	user = request.user
