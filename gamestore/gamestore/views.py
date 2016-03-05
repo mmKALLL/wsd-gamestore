@@ -68,7 +68,7 @@ def userPage(request, user_name):
 					user.save()
 					return redirect('/user/' + request.user.username)
 				else:
-					return HttpResponse(user_form.errors)
+					return HttpResponse(user_form.errors + ' is invalid.')
 			else:
 				user = get_object_or_404(User, pk=request.user.id)
 				userext = get_object_or_404(UserExtension, user=user)
@@ -117,7 +117,7 @@ def developerPage(request, user_name):
 
 						return redirect('/developer/' + request.user.username)
 					else:
-						return HttpResponse(new_game_form.errors)
+						return HttpResponse(new_game_form.errors + ' is invalid.')
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:
 					developer = get_object_or_404(User, pk=request.user.id)
@@ -233,7 +233,7 @@ def gameEditView(request, view_URL):
 				form.save()
 				return redirect('/developer/' + request.user.username)
 			else:
-				return HttpResponse(form.errors)
+				return HttpResponse(form.errors + ' is invalid.')
 		else:
 			raise PermissionDenied
 	else:
