@@ -19,20 +19,20 @@ def index(request):
 
 
 def register(request):
-	if request.method == 'POST':
-		user_form = UserForm(data=request.POST)
-		if user_form.is_valid():
-			user = user_form.save()
-			user.set_password(user.password)
-			user.save()
-			userextension = UserExtension(user=user)
-			userextension.save()
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            userextension = UserExtension(user=user)
+            userextension.save()
             if user.email:
                 send_mail(
                     # Subject
                     'Validate your Quagmire Zone Underground account', 
                     # Message                
-                    'Hi, and thank you for joining Quagmire Zone Underground.\n\nPlease use the following URL to validate your account.\n\nhttp://localhost:8000/user/' + user.name + '/validate?key=' + md5(str(user.id).encode('ascii')).hexdigest() + '\n\nThis message is safe to ignore if you received by error. Please do not share the link with anyone.\n\nBest Regards,\nQuagmire Zone Underground',
+                    'Hi, and thank you for joining Quagmire Zone Underground.\n\nPlease use the following URL to validate your account.\n\nhttp://localhost:8000/user/' + user.username + '/validate?key=' + md5(str(user.id).encode('ascii')).hexdigest() + '\n\nThis message is safe to ignore if you received by error. Please do not share the link with anyone.\n\nBest Regards,\nQuagmire Zone Underground',
                     # Sender
                     'no-reply@quagmire.com',
                     # Recipients
@@ -40,9 +40,9 @@ def register(request):
                     # Fail silently?
                     fail_silently=False)
             return redirect(index)
-	else:
-		user_form = UserForm()
-	return render(request, 'register.html', {'form': user_form})
+    else:
+        user_form = UserForm()
+    return render(request, 'register.html', {'form': user_form})
 
 
 def userValidation(request, user_name):
