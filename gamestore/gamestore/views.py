@@ -35,12 +35,23 @@ def register(request):
 def userPage(request, user_name):
 	if request.user.is_authenticated():
 		if request.user.username == user_name:
-			user = get_object_or_404(User, pk=request.user.id)
-			userext = get_object_or_404(UserExtension, user=user)
-			gamesOwned = GamesOwned.objects.filter(userextension=userext)
-			games = [elem.game for elem in gamesOwned]
-			context = {'user': user, 'games': games}
-			return render(request, 'user.html', context)
+			if request.method == 'POST':
+				user_form = UserEditForm(data=request.POST, instance=request.user)
+				if user_form.is_valid():
+					user = user_form.save()
+					user.set_password(user.password)
+					user.save()
+					return redirect('/user/' + request.user.username)
+				else:
+					return HttpResponse(user_form.errors)
+			else:
+				user = get_object_or_404(User, pk=request.user.id)
+				userext = get_object_or_404(UserExtension, user=user)
+				gamesOwned = GamesOwned.objects.filter(userextension=userext)
+				games = [elem.game for elem in gamesOwned]
+				user_form = UserEditForm(instance=request.user)
+				context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'form': user_form}
+				return render(request, 'user.html', context)
 		else:
 			raise PermissionDenied
 	else:
@@ -139,15 +150,23 @@ def gameEditView(request, view_URL):
 
 # TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
+<<<<<<< HEAD
     user = request.user
     game = get_object_or_404(Game, URL=view_URL)
     owned = False
+    highscores = Highscore.objects.filter(game=game)
+    players = User.objects.all()
+    playerscores = []
+    for player in players:
+        personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+        if len(personalscores) >= 1:
+            playerscores.append(personalscores[0])
     pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
     
     # If game was just purchased...
     if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
         if request.GET.get('result', '') == 'success':
-            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'): # TODO: PermissionDenied if hashes do not match
+            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'): # TODO: Raise PermissionDenied if hashes do not match
                 purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
                 purchasedgame.save()
                 request.user.userextension.ownedGames.add(purchasedgame)
@@ -172,7 +191,7 @@ def gameView(request, view_URL):
                 'amount': game.price,
             })
 
-    context = {'user': user, 'game': game, 'owned': owned, 'purchase_info': p_info}
+    context = {'user': user, 'game': game, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
     return render(request, 'game.html', context)
 
 
@@ -182,7 +201,7 @@ def gamePlayView(request, view_URL):
 		context = {'game': game}
 		return render(request, 'game_play.html', context)
 	else:
-		return render(request, 'auth_required.html', {'last_page': 'game', 'game': game})
+		return render(request, 'auth_required.html', {}) # TODO: 'last_page': 'game', 'game': game
 
 
 def gameList(request):

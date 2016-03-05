@@ -91,6 +91,20 @@ header {
 	float: right;
 }
 
+.resize {
+	max-width: 344px;
+	max-height: 344px;
+	margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+
+	.image-secondary {
+		display: none;
+	}
+
+}
+
 .generic {
 	background-color: #273B52;
 	border: 1px solid #337AB7;
@@ -98,9 +112,15 @@ header {
 	padding: 12px;
 }
 
-.username {
+.name {
+	font-size: 30px;
+	color: #66A4DF;
+}
+
+.description {
 	font-size: 24px;
 	color: #66A4DF;
+	margin-bottom: 6px;
 }
 
 footer {

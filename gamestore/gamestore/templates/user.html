@@ -34,8 +34,24 @@
         </header>
         <div class="container">
             <div class="row">
-                <div class="generic username">{{ user.username }}</div>
-                <div class="generic">Owned games?</div>
+                <div class="generic name">{{ user.username }}</div>
+                <div class="generic">Owned games?
+                    {% for game in games %}
+                        <div class="gameinfo">
+                            <div class="gameinfo-left">
+                                <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img class="resize" src="{{ game.image }}"><img class="resize image-secondary" src="{{ game.image2 }}">
+                            </div>
+                            <div class="gameinfo-right">
+                                {{ game.genre }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>Developer: {{ game.developer }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <form method="POST" action="/user/{{ user.username }}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input class="btn submit" type="submit" value="Edit profile information" />
+                    </form>
+                </div>
             </div>
         </div>
         <footer class="footer">&copy; Quagmire Zone Underground, 2016</footer>
