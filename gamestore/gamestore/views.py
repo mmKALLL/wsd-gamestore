@@ -197,8 +197,13 @@ def gameView(request, view_URL):
 def gamePlayView(request, view_URL):
 	if request.user.is_authenticated():
 		game = get_object_or_404(Game, URL=view_URL)
-		context = {'game': game}
-		return render(request, 'game_play.html', context)
+		userext = get_object_or_404(UserExtension, user=request.user)
+		gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
+		if gameOwned:
+			context = {'game': game}
+			return render(request, 'game_play.html', context)
+		else:
+			raise PermissionDenied
 	else:
 		return render(request, 'auth_required.html', {}) # TODO: 'last_page': 'game', 'game': game
 

@@ -53,6 +53,12 @@
                     {% if user.is_authenticated %}
                         {% if owned %}
                             <a href="/game/{{ game.URL }}/play" class="btn btn-primary" role="button">Play the game!</a>
+                            Your best score:
+                        	{% for highscore in highscores %}
+                            	{% if highscore.user == user %}
+                                	<p> Score: {{ highscore.data }} Player: {{ user }} </p>
+                            	{% endif %}
+                        	{% endfor %}
                         {% else %}
                             <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
                                 <input type="hidden" name="pid" value="{{ purchase_info.payment_id }}" />
@@ -69,12 +75,6 @@
                                 <input type="submit" value="Purchase" class="btn" />
                             </form>
                         {% endif %}
-                        Your best score:
-                        {% for highscore in highscores %}
-                            {% if highscore.user == user %}
-                                <p> Score: {{ highscore.data }} Player: {{ user }} </p>
-                            {% endif %}
-                        {% endfor %}
                     {% endif %}
                     All-time-high scores:
                     {% for highscore in highscores %}
