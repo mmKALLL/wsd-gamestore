@@ -288,7 +288,6 @@ def postScore(request):
 
 	highscore = Highscores.objects.filter(user=user, game=game)
 
-<<<<<<< HEAD
 	if len(highscore)>0:
 		if highscore[0].data < score:
 			highscore[0].data = score
@@ -301,8 +300,7 @@ def postScore(request):
 
 	
 
-=======
 def sameOrigin(request):
     return render(request, 'sameorigin.html', {})
->>>>>>> 99a2c0ea2966d0191dc0ecf224355a0cde7d042d
+
 

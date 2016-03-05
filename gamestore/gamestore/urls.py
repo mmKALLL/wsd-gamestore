@@ -35,9 +35,6 @@ urlpatterns = [
     url(r'^game/([0-9a-zA-Z~\.\-_]+)$', views.gameView),
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test),
-<<<<<<< HEAD
-    url(r'^post_score$', views.postScore, name='post_score')
-=======
+    url(r'^post_score$', views.postScore, name='post_score'),
     url(r'^sameorigin$', views.sameOrigin)
->>>>>>> 99a2c0ea2966d0191dc0ecf224355a0cde7d042d
 ]
