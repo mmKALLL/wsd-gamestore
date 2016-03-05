@@ -150,7 +150,6 @@ def gameEditView(request, view_URL):
 
 # TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
-<<<<<<< HEAD
     user = request.user
     game = get_object_or_404(Game, URL=view_URL)
     owned = False
