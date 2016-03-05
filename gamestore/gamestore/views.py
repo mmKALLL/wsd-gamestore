@@ -100,8 +100,6 @@ def developerPage(request, user_name):
 					new_game_form = GameSubmissionForm()
 					game_editing_forms = []
 					for x in games:
-						#editing_form = GameEditingForm(data={'name': x.name, 'gameSource': x.gameSource,
-						#	'isPublic': x.isPublic, 'genre': x.genre, 'description': x.description, 'image': x.image, 'image2': x.image2, 'price': x.price})
 						editing_form = GameSubmissionForm(instance=x)
 						editing_form.fields['URL'].widget.attrs['readonly'] = True
 						#if editing_form.is_valid():
