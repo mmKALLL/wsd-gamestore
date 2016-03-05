@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 class UserExtension(models.Model):
     user = models.OneToOneField(
@@ -25,10 +26,12 @@ GAME_GENRES = (
     (GENRE_RACING, 'Racing'),
 )
 
+URLAllowedChars = RegexValidator(r'^[0-9a-zA-Z~\.\-_]+$', 'Only alphanumeric characters and ~/./-/_ are allowed.')
+
 class Game(models.Model):
     name = models.CharField(max_length=80)
-    URL = models.CharField(max_length=150, unique=True)
-    gameSource = models.URLField(max_length=300, unique=True, blank=True)
+    URL = models.CharField(max_length=150, unique=True, validators=[URLAllowedChars])
+    gameSource = models.URLField(max_length=300, unique=True)
     isPublic = models.BooleanField(default=False)
     genre = models.CharField(max_length=30, default='Unspecified', choices=GAME_GENRES)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.

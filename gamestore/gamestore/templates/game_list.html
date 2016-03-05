@@ -53,7 +53,7 @@
                             {% if game.genre == genre %}
                                 <div class="gameinfo">
                                     <div class="gameinfo-left">
-                                        <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img src="{{ game.image }}"><img src="{{ game.image2 }}">
+                                        <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img class="resize" src="{{ game.image }}"><img class="resize image-secondary" src="{{ game.image2 }}">
                                     </div>
                                     <div class="gameinfo-right">
                                         {{ genre }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>Developer: {{ game.developer }}<br>{{ game.price }} €
