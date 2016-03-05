@@ -7,7 +7,8 @@ class UserExtension(models.Model):
         User, 
         on_delete=models.CASCADE, 
         parent_link=False)
-    isDeveloper = models.BooleanField(default=False)
+    isDeveloper = models.BooleanField(default=False, editable=False)
+    isValidated = models.BooleanField(default=False, editable=False) # Does not actually affect anything, but nice to have...
     ownedGames = models.ManyToManyField('GamesOwned')
 
 GENRE_ACTION = 'Action'
@@ -56,8 +57,8 @@ class Game(models.Model):
         on_delete=models.SET_NULL, 
         null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name='price (€)')
-    createDate = models.DateTimeField(auto_now_add=True, null=True)
-    updateDate = models.DateTimeField(auto_now=True, null=True) # TODO: Not sure if works.
+    createDate = models.DateTimeField(auto_now_add=True, null=True, editable=False)
+    updateDate = models.DateTimeField(auto_now=True, null=True, editable=False) # TODO: Not sure if works.
     
 class GameSave(models.Model):
     data = models.TextField(blank=True) # JSON data about the saved game.
