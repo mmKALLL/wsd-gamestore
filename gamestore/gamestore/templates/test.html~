@@ -15,7 +15,19 @@
         </header>
         <div>
             {% for user in users %}
-            <p> {{user}} </p>
+                <p> 
+                name: {{user}} <br>
+                id: {{user.id}} <br>
+                developer: {{user.userextension.isDeveloper}} <br>
+                validated: {{user.userextension.isValidated}} <br>
+                {{user.password}} 
+                </p>
+            {% endfor %}
+        </div>
+        <div>
+            {% for game in games %}
+            <p> {{game.name}} </p>
+            <p> {{game.URL}} </p>
             {% endfor %}
         </div>
         <footer>

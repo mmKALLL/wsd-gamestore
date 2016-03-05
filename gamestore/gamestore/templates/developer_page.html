@@ -43,13 +43,14 @@
                             <div class="gameinfo-right">
                                 {{ game.genre }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>Price: {{ game.price }} €<br><a class="btn submit collapser" data-toggle="collapse" data-target="#edit-{{ game.URL }}">Edit game</a>
                             </div>
+                            
                             SOLD GAMES:
-
-                                        {% for boughtgame in boughtgames %}
-                                            {% if boughtgame.game == game %}
-                                                <p> Time: {{boughtgame.createDate}} </p>
-                                            {% endif %}
-                                        {% endfor %}
+                                {% for boughtgame in boughtgames %}
+                                    {% if boughtgame.game == game %}
+                                        <p> Time: {{boughtgame.createDate}} </p>
+                                    {% endif %}
+                                {% endfor %}
+                    
                             <div id="edit-{{ game.URL }}" class="edit collapse">
                                 <br>
                                 <form method="POST" action="/game/{{ game.URL }}/edit">
