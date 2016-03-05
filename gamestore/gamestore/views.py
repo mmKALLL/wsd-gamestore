@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from gamestore.models import *
 from django.contrib.auth.models import User
 from gamestore.forms import *
+from hashlib import md5
 
 def index(request):
 	games = Game.objects.filter(isPublic=True)
@@ -123,8 +124,12 @@ def gameView(request, view_URL):
 	owned = False
 	if user.is_authenticated:
 		userext = get_object_or_404(UserExtension, user=user)
-		if len(GamesOwned.objects.filter(game=game, userextension=userext)) >= 1: # TODO: Check if this works
+        gameOwned = GamesOwned.objects.filter(game=game, userextension=userext) # TODO: Check if this works
+		if len(gameOwned) >= 1: # TODO: Does not respect payment status (!!!)
 			owned = True
+        else:
+            context = {'purchase_info': {'payment_id': md5(('user: ' + user.id + ', game: ' + game.id).encode('ascii')), }}
+            return render(request, 'game.html', context)
 	context = {'user': user, 'game': game, 'owned': owned}
 	return render(request, 'game.html', context)
 

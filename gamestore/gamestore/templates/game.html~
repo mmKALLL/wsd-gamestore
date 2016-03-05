@@ -56,7 +56,7 @@
                         {% else %}
                             <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
                                 <input type="hidden" name="pid" value="{{ purchase_info.payment_id }}" />
-                                <input type="hidden" name="sid" value="{{ purchase_info.seller_id }}" />
+                                <input type="hidden" name="sid" value="quagmire" />
                                 <input type="hidden" name="success_url"
                                     value="{{ purchase_info.success_url }}" />
                                 <input type="hidden" name="cancel_url"
