@@ -41,3 +41,4 @@ class GameEditingForm(ModelForm):
             'description': Textarea(attrs={'cols': 80, 'rows': 20, 'label': 'Awesome description!'}),
         }
 
+

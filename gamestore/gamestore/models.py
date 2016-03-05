@@ -10,7 +10,7 @@ class UserExtension(models.Model):
     isDeveloper = models.BooleanField(default=False)
     ownedGames = models.ManyToManyField('GamesOwned')
     
-GENRE_UNSPECIFIED = 'Unspecified'
+GENRE_UNSPECIFIED = 'Other'
 GENRE_ACTION = 'Action'
 GENRE_ADVENTURE = 'Adventure'
 GENRE_RPG = 'RPG'
@@ -18,7 +18,7 @@ GENRE_PUZZLE = 'Puzzle'
 GENRE_RACING = 'Racing'
 
 GAME_GENRES = (
-    (GENRE_UNSPECIFIED, 'Unspecified'),
+    (GENRE_UNSPECIFIED, 'Other'),
     (GENRE_ACTION, 'Action'),
     (GENRE_ADVENTURE, 'Adventure'),
     (GENRE_RPG, 'RPG'),
@@ -33,7 +33,7 @@ class Game(models.Model):
     URL = models.CharField(max_length=150, unique=True, validators=[URLAllowedChars])
     gameSource = models.URLField(max_length=300, unique=True)
     isPublic = models.BooleanField(default=False)
-    genre = models.CharField(max_length=30, default='Unspecified', choices=GAME_GENRES)
+    genre = models.CharField(max_length=30, default=GENRE_UNSPECIFIED, choices=GAME_GENRES)
     description = models.TextField(blank=True) # TODO: Think about how to implement line feeds.
     image = models.URLField(blank=True)
     image2 = models.URLField(blank=True)
@@ -42,8 +42,8 @@ class Game(models.Model):
         on_delete=models.SET_NULL, 
         null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    createDate = models.DateTimeField(auto_now_add=True, null=True) # TODO: Not sure if works.
-    updateDate = models.DateTimeField(auto_now=True, null=True)
+    createDate = models.DateTimeField(auto_now_add=True, null=True)
+    updateDate = models.DateTimeField(auto_now=True, null=True) # TODO: Not sure if works.
     
 class GameSave(models.Model):
     data = models.TextField(blank=True) # JSON data about the saved game.
@@ -68,22 +68,28 @@ PAYMENT_SUCCESS = 'success'
 PAYMENT_ERROR = 'error'
 PAYMENT_CANCEL = 'cancel'
 PAYMENT_DEV = 'dev'
+PAYMENT_INPROGRESS = 'in_progress'
+PAYMENT_NOT_STARTED = 'not_started'
 
 PAYMENT_STATES = (
     (PAYMENT_SUCCESS, 'Success'),
     (PAYMENT_ERROR, 'Error'),
     (PAYMENT_CANCEL, 'Canceled'),
     (PAYMENT_DEV, 'Developer'),
+    (PAYMENT_INPROGRESS, 'In Progress'),
+    (PAYMENT_NOT_STARTED, 'Not started'),
 )
 
+# Only used for successfully purchased or developed games.
 class GamesOwned(models.Model):
-    paymentState = models.TextField() # Payment state; success, error, cancel, developer
+    paymentState = models.TextField(default=PAYMENT_NOT_STARTED, choices=PAYMENT_STATES) # Payment state; success, error, cancel, developer, etc
+    createDate = models.DateTimeField(auto_now_add=True, null=True)
+    updateDate = models.DateTimeField(auto_now=True, null=True) # TODO: Not sure if works.
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE) 
     # Should users know about owned games which have been deleted?
     # If so, the on_delete value for the fk should be models.SET_NULL
     
-
 
 

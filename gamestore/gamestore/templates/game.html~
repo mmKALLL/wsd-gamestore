@@ -43,20 +43,20 @@
         </header>
         <div class="container">
             <div class="row">
-                <div class="generic">
-                    <div class="name">{{ game.name }}</div><img class="resize" src="{{ game.image }}"><img class="resize" src="{{ game.image2 }}"><br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
-                </div>
-                <div class="generic">
-                    <div class="description">Description</div>{{ game.description }}
-                </div>
+        		<div class="generic">
+            		<img src="{{ game.image }}"><img src="{{ game.image2 }}"><br>{{ game.name }}<br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
+        		</div>
+        		<div class="generic">
+            		{{ game.description }}
+        		</div>
                 <div class="generic">
                     {% if user.is_authenticated %}
-                        {% if owned %}
+                        {% if owned == True %}
                             <a href="/game/{{ game.URL }}/play" class="btn btn-primary" role="button">Play the game!</a>
                         {% else %}
                             <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
                                 <input type="hidden" name="pid" value="{{ purchase_info.payment_id }}" />
-                                <input type="hidden" name="sid" value="{{ purchase_info.seller_id }}" />
+                                <input type="hidden" name="sid" value="quagmire" />
                                 <input type="hidden" name="success_url"
                                     value="{{ purchase_info.success_url }}" />
                                 <input type="hidden" name="cancel_url"
@@ -69,17 +69,9 @@
                                 <input type="submit" value="Purchase" class="btn" />
                             </form>
                         {% endif %}
-                        Your best score:
-                        {% for highscore in highscores %}
-                            {% if highscore.user == user %}
-                                <p> Score: {{ highscore.data }} Player: {{ user }} </p>
-                            {% endif %}
-                        {% endfor %}
+                    your best score<br>
                     {% endif %}
-                    All-time-high scores:
-                    {% for highscore in highscores %}
-                        <p> Score: {{ highscore.data }} Player: {{ highscore.user }} </p>
-                    {% endfor %}
+                    highscores list
                 </div>
             </div>
         </div>
