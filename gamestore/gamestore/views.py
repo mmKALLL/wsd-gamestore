@@ -118,7 +118,7 @@ def developerPage(request, user_name):
 					else:
 						return HttpResponse(new_game_form.errors)
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
-				else:					
+				else:
 					developer = get_object_or_404(User, pk=request.user.id)
 					games = Game.objects.filter(developer=developer) 
 					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)
@@ -148,7 +148,6 @@ def developerPage(request, user_name):
 
 
 
-# TODO: Whether a game is public is not checked.
 def gameView(request, view_URL):
 	user = request.user
 	game = get_object_or_404(Game, URL=view_URL)
