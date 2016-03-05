@@ -58,6 +58,15 @@
                                                 Released: {{ game.createDate }}<br>{{ game.price }} €
                                             </div>
                                         </div>
+                                        {% for edit_form in edit_forms %} <!--TODO: No alternative? -->
+                                            {% if game.gameSource == edit_form.gameSource %}
+                                                <form method="POST" action="/game/{{ game.URL }}/edit">
+                                                    {% csrf_token %}
+                                                    {{ edit_form.as_p }}
+                                                    <input class="btn submit" type="submit" value="Edit game" />
+                                                </form>
+                                            {% endif %}
+                                        {% endfor %}
                                     {% endfor %}
                                 {% else %} <!-- TODO: Remove this note? -->
                                     Unfortunately, you do not have the permission to view our developer page. You can become one after reading our <a href="developerinfo" target="/">info page</a>.
