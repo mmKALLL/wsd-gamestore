@@ -152,6 +152,7 @@ def gameEditView(request, view_URL):
 def gameView(request, view_URL):
 	user = request.user
 	game = get_object_or_404(Game, URL=view_URL)
+	purchased_now = False
 	owned = False
 	highscores = Highscore.objects.filter(game=game)
 	players = User.objects.all()
@@ -171,6 +172,7 @@ def gameView(request, view_URL):
 				request.user.userextension.ownedGames.add(purchasedgame)
 				request.user.save()
 				request.user.userextension.save()
+				purchased_now = True
 	
 	# The page itself
 	p_info = {}
@@ -190,7 +192,7 @@ def gameView(request, view_URL):
 				'amount': game.price,
 			})
 	if game.isPublic or owned:
-		context = {'user': user, 'game': game, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
+		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
 		return render(request, 'game.html', context)
 	else:
 		raise PermissionDenied

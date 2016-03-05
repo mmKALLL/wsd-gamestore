@@ -11,6 +11,15 @@ input {
 	background-color: #1B2838;
 }
 
+select {
+	background-color: #1B2838;
+}
+
+textarea {
+	background-color: #1B2838;
+	width: 100%;
+}
+
 .submit {
 	background-color: #000000;
 	border: 1px solid #A0A0A0;
@@ -103,6 +112,10 @@ header {
 		display: none;
 	}
 
+}
+
+.success {
+	color: #88FF88;
 }
 
 .generic {

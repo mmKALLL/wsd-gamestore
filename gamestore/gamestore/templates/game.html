@@ -43,6 +43,9 @@
         </header>
         <div class="container">
             <div class="row">
+                {% if purchased_now %}
+                    <div class="generic success">You have successfully purchased {{ game.name }}! You can now play the game!</div>
+                {% endif %}
                 <div class="generic">
                     <div class="name">{{ game.name }}</div><img class="resize" src="{{ game.image }}"><img class="resize" src="{{ game.image2 }}"><br>{{ game.genre }}<br>Developer: {{ game.developer }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>{{ game.price }} €
                 </div>
