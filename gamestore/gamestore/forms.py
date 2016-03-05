@@ -11,6 +11,13 @@ class UserForm(ModelForm):
         model = User
         fields = ['username', 'email', 'password']
     
+class UserEditForm(ModelForm):
+
+    password = forms.CharField(widget=forms.PasswordInput())
+    
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'password']
 
 class GameSubmissionForm(ModelForm):
     

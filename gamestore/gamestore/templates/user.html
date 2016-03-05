@@ -46,6 +46,11 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <form method="POST" action="/user/{{ user.username }}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input class="btn submit" type="submit" value="Edit profile information" />
+                    </form>
                 </div>
             </div>
         </div>
