@@ -34,7 +34,7 @@ def userPage(request, user_name):
 			userext = get_object_or_404(UserExtension, user=user)
 			gamesOwned = GamesOwned.objects.filter(userextension=userext)
 			games = [elem.game for elem in gamesOwned]
-			context = {'user': user, 'games': games}
+			context = {'user': user, 'games': sorted(games, key=lambda x: x.name)}
 			return render(request, 'user.html', context)
 		else:
 			raise PermissionDenied
