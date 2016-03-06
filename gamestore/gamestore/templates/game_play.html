@@ -84,15 +84,14 @@ function listener(event){
                 'game_id': '{{game.URL}}',
             }),
             success: function(data){
-                alert('Load request accepted!');
+                data.response.gameState = JSON.parse(data.response.gameState);
+                event.source.postMessage( data.response , event.origin);
             },
             failure: function(data){
                 alert('An error occured with the load request');
             },
         });
 
-    
-        event.source.postMessage("{{ response }}", event.origin)
     }
 }
     window.addEventListener("message", listener, false);

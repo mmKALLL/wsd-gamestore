@@ -315,8 +315,8 @@ def saveState(request):
     save = GameSave.objects.filter(user=user, game=game)
     
     if save:
-        save.data = state
-        save.save()
+        save[0].data = state
+        save[0].save()
     else:
         save = GameSave(game=game, user=user, data=state)
         save.save()
@@ -329,15 +329,15 @@ def loadRequest(request):
     game = get_object_or_404(Game, URL=game_id)
     user = request.user
     
-    save = GameSave.objects.filter(user=user, game=game)
+    save = GameSave.objects.get(user=user, game=game)
     
     if save:
         response = {'messageType': 'LOAD', 'gameState': save.data}
-        context = {'response': json.dumps(response)}
+        context = {'response': response}
         return JsonResponse(context)
     else:
         response = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
-        context = {'response': json.dumps(response)}
+        context = {'response': response}
         return JsonResponse(context)
         
     
