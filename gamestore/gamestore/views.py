@@ -185,19 +185,7 @@ def gameView(request, view_URL):
 		else:
 			p_info.update({
 				'payment_id': pid,
-				'seller_id': 'quagmire',gameState: {
-
-playerItems: [
-
-"Sword",
-
- "Wizard Hat"
-
-],
-
-score: 506.0 // Float
-
-}
+				'seller_id': 'quagmire',
 				'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
 				'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
 				'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
@@ -273,19 +261,7 @@ def gameStatsAPIhandling(request, view_URL):
         return HttpResponseBadRequest("Bad request to the API.")
 
 def gameList(request):
-	user = request.usergameState: {
-
-playerItems: [
-
-"Sword",
-
- "Wizard Hat"
-
-],
-
-score: 506.0 // Float
-
-}
+	user = request.user
 	games = Game.objects.filter(isPublic=True)
 	genres = []
 	for game in games:
@@ -351,10 +327,12 @@ def loadRequest(request):
 	save = GameSave.objects.filter(user=user, game=game)
 
 	if save:
-		context = {'messageType': 'LOAD', 'gameState': save.data}
+        response = {'messageType': 'LOAD', 'gameState': save.data}
+		context = {'response': response}
 		return JsonResponse(context)
 	else:
-		context = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
+        response = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
+		context = {'response': response}
 		return JsonResponse(context)
 		
 	
