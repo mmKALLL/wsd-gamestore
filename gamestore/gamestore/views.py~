@@ -1,4 +1,4 @@
-from django.http import HttpResponse, Http404, HttpResponseBadRequest
+from django.http import HttpResponse, Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
@@ -6,6 +6,7 @@ from gamestore.models import *
 from django.contrib.auth.models import User
 from gamestore.forms import *
 from hashlib import md5
+import json
 PAYMENT_SECRET_KEY = 'ed1c50ac3b75bd1aa70835c8c84007ed'
 
 
@@ -27,7 +28,7 @@ def register(request):
             user.save()
             userextension = UserExtension(user=user)
             userextension.save()
-            if user.email: # Email disabled because we don't have an SMTP server.
+#            if user.email: # Email disabled because we don't have an SMTP backend.
 #                send_mail(
 #                    # Subject
 #                    'Validate your Quagmire Zone Underground account',
@@ -67,7 +68,7 @@ def userPage(request, user_name):
 					user.save()
 					return redirect('/user/' + request.user.username)
 				else:
-					return HttpResponse(user_form.errors)
+					return HttpResponse(user_form.errors + ' is invalid.')
 			else:
 				user = get_object_or_404(User, pk=request.user.id)
 				userext = get_object_or_404(UserExtension, user=user)
@@ -116,7 +117,7 @@ def developerPage(request, user_name):
 
 						return redirect('/developer/' + request.user.username)
 					else:
-						return HttpResponse(new_game_form.errors)
+						return HttpResponse(new_game_form.errors + ' is invalid.')
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:
 					developer = get_object_or_404(User, pk=request.user.id)
@@ -157,7 +158,7 @@ def gameView(request, view_URL):
 	players = User.objects.all()
 	playerscores = []
 	for player in players:
-		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data)
 		if len(personalscores) >= 1:
 			playerscores.append(personalscores[0])
 
@@ -184,7 +185,19 @@ def gameView(request, view_URL):
 		else:
 			p_info.update({
 				'payment_id': pid,
-				'seller_id': 'quagmire',
+				'seller_id': 'quagmire',gameState: {
+
+playerItems: [
+
+"Sword",
+
+ "Wizard Hat"
+
+],
+
+score: 506.0 // Float
+
+}
 				'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
 				'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
 				'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
@@ -192,7 +205,7 @@ def gameView(request, view_URL):
 				'amount': game.price,
 			})
 	if game.isPublic or owned:
-		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(personalscores, key=lambda y: y.data.score), 'purchase_info': p_info}
+		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: -y.data), 'purchase_info': p_info}
 		return render(request, 'game.html', context)
 	else:
 		raise PermissionDenied
@@ -232,7 +245,7 @@ def gameEditView(request, view_URL):
 				form.save()
 				return redirect('/developer/' + request.user.username)
 			else:
-				return HttpResponse(form.errors)
+				return HttpResponse(form.errors + ' is invalid.')
 		else:
 			raise PermissionDenied
 	else:
@@ -260,7 +273,19 @@ def gameStatsAPIhandling(request, view_URL):
         return HttpResponseBadRequest("Bad request to the API.")
 
 def gameList(request):
-	user = request.user
+	user = request.usergameState: {
+
+playerItems: [
+
+"Sword",
+
+ "Wizard Hat"
+
+],
+
+score: 506.0 // Float
+
+}
 	games = Game.objects.filter(isPublic=True)
 	genres = []
 	for game in games:
@@ -276,8 +301,64 @@ def gameList(request):
 def test(request):
 	users = User.objects.all()
 	games = Game.objects.all()
-	return render(request, 'test.html', {'users': users, 'games': games})
+	highscores = Highscore.objects.all()
+	gamesaves = GameSave.objects.all()
+	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores, 'gamesaves': gamesaves})
 
+def postScore(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	score = int(data['score'])
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
 
+	highscore = Highscore.objects.filter(user=user, game=game)
+
+	if len(highscore)>0:
+		if highscore[0].data < score:
+			highscore[0].data = score
+			highscore[0].save()
+	else:
+		highscore = Highscore(game=game, user=user, data=score)
+		highscore.save()
+	context = {'message': 'Score saved succesfully!'}
+	return JsonResponse(context)
+
+def saveState(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	state = data['gameState']
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
+
+	save = GameSave.objects.filter(user=user, game=game)
+
+	if save:
+		save.data = state
+		save.save()
+	else:
+		save = GameSave(game=game, user=user, data=state)
+		save.save()
+	context = {'message': 'Game saved succesfully!'}
+	return JsonResponse(context)
+
+def loadRequest(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
+
+	save = GameSave.objects.filter(user=user, game=game)
+
+	if save:
+		context = {'messageType': 'LOAD', 'gameState': save.data}
+		return JsonResponse(context)
+	else:
+		context = {'messageType': 'ERROR', 'info': 'Unable to load the game.'}
+		return JsonResponse(context)
+		
+	
+def sameOrigin(request):
+    return render(request, 'sameorigin.html', {})
 
 
