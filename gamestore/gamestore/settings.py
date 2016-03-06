@@ -26,7 +26,7 @@ SECRET_KEY = '*=e@20kz0ad@hu7d&&kzow%8*r=@cwyfiq_cf=dih0%4$7y7e+'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost', # TODO: Add Heroku when we have it
+    'https://quagmirezone.herokuapp.com/'
 ]
 
 
@@ -122,9 +122,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/quagmire/static/'
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+                    os.path.join(PROJECT_ROOT, 'static'),
+                    )
+
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 # Redirecting URLs (used in login)

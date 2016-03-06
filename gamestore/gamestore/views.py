@@ -185,9 +185,9 @@ def gameView(request, view_URL):
             p_info.update({
                 'payment_id': pid,
                 'seller_id': 'quagmire',
-                'success_url': 'http://localhost:8000/game/' + game.URL, # TODO: Change to Heroku URL
-                'cancel_url': 'http://localhost:8000/game/' + game.URL,
-                'error_url': 'http://localhost:8000/game/' + game.URL,
+                'success_url': 'http://quagmirezone.herokuapp.com/game/' + game.URL, # TODO: Change to Heroku URL
+                'cancel_url': 'http://quagmirezone.herokuapp.com/game/' + game.URL,
+                'error_url': 'http://quagmirezone.herokuapp.com/game/' + game.URL,
                 'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(),
                 'amount': game.price,
             })
