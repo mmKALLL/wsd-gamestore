@@ -329,10 +329,10 @@ def loadRequest(request):
     game = get_object_or_404(Game, URL=game_id)
     user = request.user
     
-    save = GameSave.objects.get(user=user, game=game)
+    save = GameSave.objects.filter(user=user, game=game)
     
     if save:
-        response = {'messageType': 'LOAD', 'gameState': save.data}
+        response = {'messageType': 'LOAD', 'gameState': save[0].data}
         context = {'response': response}
         return JsonResponse(context)
     else:
