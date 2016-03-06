@@ -34,8 +34,10 @@ urlpatterns = [
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/stats$', views.gameStatsAPIhandling),
     url(r'^game/([0-9a-zA-Z~\.\-_]+)$', views.gameView),
     url(r'^gamelist$', views.gameList),
-    url(r'^test$', views.test),
     url(r'^post_score$', views.postScore, name='post_score'),
-    url(r'^sameorigin$', views.sameOrigin),
+    url(r'^save_state$', views.saveState, name='save_state'),
+    url(r'^load_request$', views.loadRequest, name='load_request'),
     url("^soc/", include("social.apps.django_app.urls", namespace="social")),
+    url(r'^test$', views.test),
+    url(r'^sameorigin$', views.sameOrigin)
 ]

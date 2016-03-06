@@ -72,7 +72,7 @@ def userPage(request, user_name):
 					user.save()
 					return redirect('/user/' + request.user.username)
 				else:
-					return HttpResponse(user_form.errors)
+					return HttpResponse(user_form.errors + ' is invalid.')
 			else:
 				user = get_object_or_404(User, pk=request.user.id)
 				userext = get_object_or_404(UserExtension, user=user)
@@ -121,7 +121,7 @@ def developerPage(request, user_name):
 
 						return redirect('/developer/' + request.user.username)
 					else:
-						return HttpResponse(new_game_form.errors)
+						return HttpResponse(new_game_form.errors + ' is invalid.')
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:
 					developer = get_object_or_404(User, pk=request.user.id)
@@ -197,7 +197,7 @@ def gameView(request, view_URL):
 				'amount': game.price,
 			})
 	if game.isPublic or owned:
-		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: y.data), 'purchase_info': p_info}
+		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: -y.data), 'purchase_info': p_info}
 		return render(request, 'game.html', context)
 	else:
 		raise PermissionDenied
@@ -237,7 +237,7 @@ def gameEditView(request, view_URL):
 				form.save()
 				return redirect('/developer/' + request.user.username)
 			else:
-				return HttpResponse(form.errors)
+				return HttpResponse(form.errors + ' is invalid.')
 		else:
 			raise PermissionDenied
 	else:
@@ -283,7 +283,8 @@ def test(request):
 	users = User.objects.all()
 	games = Game.objects.all()
 	highscores = Highscore.objects.all()
-	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores})
+	gamesaves = GameSave.objects.all()
+	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores, 'gamesaves': gamesaves})
 
 def postScore(request):
 	data = json.loads(request.body.decode('UTF-8'))
@@ -304,8 +305,42 @@ def postScore(request):
 	context = {'message': 'Score saved succesfully!'}
 	return JsonResponse(context)
 
-	
+def saveState(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	state = data['gameState']
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
 
+	save = GameSave.objects.filter(user=user, game=game)
+
+	if save:
+		save.data = state
+		save.save()
+	else:
+		save = GameSave(game=game, user=user, data=state)
+		save.save()
+	context = {'message': 'Game saved succesfully!'}
+	return JsonResponse(context)
+
+def loadRequest(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
+
+	save = GameSave.objects.filter(user=user, game=game)
+
+	if save:
+        response = {'messageType': 'LOAD', 'gameState': save.data}
+		context = {'response': response}
+		return JsonResponse(context)
+	else:
+        response = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
+		context = {'response': response}
+		return JsonResponse(context)
+		
+	
 def sameOrigin(request):
     return render(request, 'sameorigin.html', {})
 
