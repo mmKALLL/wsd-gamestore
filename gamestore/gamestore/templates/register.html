@@ -43,7 +43,7 @@
             			<form method="POST" action="/register">
                 			{% csrf_token %}
                 			{{ form.as_p }}
-                			<input class="btn submit" type="submit" value="Register" />
+                			<input class="btn submit" type="submit" value="Register" /><a href="{% url 'social:begin' 'google-oauth2' %}?next=/" class="btn google">Login with Google</a>
             			</form>
             		{% endif %}
             	</div>
