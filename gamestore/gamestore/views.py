@@ -101,56 +101,49 @@ def developerInfoPage(request):
 		return render(request, 'developerinfo.html', {})
 
 
-
 def developerPage(request, user_name):
-	if request.user.is_authenticated():
-		if request.user.username == user_name:
-			if request.user.userextension.isDeveloper == True:
-				if request.method == 'POST':
-					new_game_form = GameSubmissionForm(data=request.POST)
-					if new_game_form.is_valid():
-						newgame = new_game_form.save()
-						newgame.developer = request.user
-						newgame.save()
-						ownedgame = GamesOwned(paymentState=PAYMENT_DEV, game=newgame)
-						ownedgame.save()
-						request.user.userextension.ownedGames.add(ownedgame)
-						ownedgame.save()
-						request.user.save()
-						request.user.userextension.save()
-
-						return redirect('/developer/' + request.user.username)
-					else:
-						return HttpResponse(new_game_form.errors)
-					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
-				else:
-					developer = get_object_or_404(User, pk=request.user.id)
-					games = Game.objects.filter(developer=developer) 
-					gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)
-					boughtGames = []
-					for boughtGame in sorted(gamesBought, key=lambda x: (x.game.name, x.createDate)):
-						if boughtGame.game in games:
-							boughtGames.append(boughtGame)
-					new_game_form = GameSubmissionForm()
-					game_editing_forms = []
-					for x in games:
-						editing_form = GameSubmissionForm(instance=x)
-						editing_form.fields['URL'].widget.attrs['readonly'] = True
-						#if editing_form.is_valid():
-						game_editing_forms.append(editing_form)
-						#else:
-						#	return HttpResponse(editing_form.errors)
-					gameforms = zip(games, game_editing_forms)
-					context = {'user': developer, 'games': games, 'form': new_game_form, 'editforms': game_editing_forms, 'gameforms': gameforms, 'boughtgames': boughtGames}
-					return render(request, 'developer_page.html', context)
-			else:
-				return redirect('/developerinfo')
-				#return redirect('/user/' + request.user.username)
-		else:
-			raise PermissionDenied
-	else:
-		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
-
+    if request.user.is_authenticated():
+        if request.user.username == user_name:
+            if request.user.userextension.isDeveloper == True:
+                added_now = False
+                errors = {}
+                if request.method == 'POST':
+                    new_game_form = GameSubmissionForm(data=request.POST)
+                    if new_game_form.is_valid():
+                        newgame = new_game_form.save()
+                        newgame.developer = request.user
+                        newgame.save()
+                        ownedgame = GamesOwned(paymentState=PAYMENT_DEV, game=newgame)
+                        ownedgame.save()
+                        request.user.userextension.ownedGames.add(ownedgame)
+                        ownedgame.save()
+                        request.user.save()
+                        request.user.userextension.save()
+                        added_now = True
+                    else:
+                        errors.update(new_game_form.errors)
+                developer = get_object_or_404(User, pk=request.user.id)
+                games = Game.objects.filter(developer=developer)
+                gamesBought = GamesOwned.objects.filter(paymentState=PAYMENT_SUCCESS)
+                boughtGames = []
+                for boughtGame in sorted(gamesBought, key=lambda x: (x.game.name, x.createDate)):
+                    if boughtGame.game in games:
+                        boughtGames.append(boughtGame)
+                add_game_form = GameSubmissionForm()
+                game_editing_forms = []
+                for x in games:
+                    editing_form = GameSubmissionForm(instance=x)
+                    editing_form.fields['URL'].widget.attrs['readonly'] = True
+                    game_editing_forms.append(editing_form)
+                gameforms = zip(games, game_editing_forms)
+                context = {'user': developer, 'form': add_game_form, 'gameforms': gameforms, 'boughtgames': boughtGames, 'added_now': added_now, 'errors': errors}
+                return render(request, 'developer_page.html', context)
+            else:
+                return redirect('/developerinfo')
+        else:
+            raise PermissionDenied
+    else:
+        return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context
 
 
 def gameView(request, view_URL):
@@ -202,6 +195,7 @@ def gameView(request, view_URL):
 	else:
 		raise PermissionDenied
 
+
 def gamePlayView(request, view_URL):
 	if request.user.is_authenticated():
 		game = get_object_or_404(Game, URL=view_URL)
@@ -229,19 +223,19 @@ def gameDeleteView(request, viewURL):
 
 
 def gameEditView(request, view_URL):
-	if request.method == 'POST':
-		game = get_object_or_404(Game, URL=view_URL)
-		if game.developer == request.user:
-			form = GameEditingForm(data=request.POST, instance=game)
-			if form.is_valid():
-				form.save()
-				return redirect('/developer/' + request.user.username)
-			else:
-				return HttpResponse(form.errors + ' is invalid.')
-		else:
-			raise PermissionDenied
-	else:
-		raise PermissionDenied
+    if request.method == 'POST':
+        game = get_object_or_404(Game, URL=view_URL)
+        if game.developer == request.user:
+            form = GameEditingForm(data=request.POST, instance=game)
+            if form.is_valid():
+                form.save()
+                return redirect('/developer/' + request.user.username)
+            else:
+                return render(request, 'error.html', {})
+        else:
+            raise PermissionDenied
+    else:
+        raise PermissionDenied
 
 
 def gameStatsAPIhandling(request, view_URL):
@@ -265,6 +259,7 @@ def gameStatsAPIhandling(request, view_URL):
     else:
         return HttpResponseBadRequest("Bad request to the API.")
 
+
 def gameList(request):
 	user = request.user
 	games = Game.objects.filter(isPublic=True)
@@ -286,6 +281,7 @@ def test(request):
 	gamesaves = GameSave.objects.all()
 	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores, 'gamesaves': gamesaves})
 
+
 def postScore(request):
 	data = json.loads(request.body.decode('UTF-8'))
 	game_id = data['game_id']
@@ -305,6 +301,7 @@ def postScore(request):
 	context = {'message': 'Score saved succesfully!'}
 	return JsonResponse(context)
 
+
 def saveState(request):
     data = json.loads(request.body.decode('UTF-8'))
     game_id = data['game_id']
@@ -322,6 +319,7 @@ def saveState(request):
         save.save()
     context = {'message': 'Game saved succesfully!'}
     return JsonResponse(context)
+
 
 def loadRequest(request):
     data = json.loads(request.body.decode('UTF-8'))

@@ -34,6 +34,9 @@
         </header>
         <div class="container">
             <div class="row">
+                {% if added_now %}
+                    <div class="generic success">New game was successfully added!</div>
+                {% endif %}
                 <div class="generic name">{{ user.username }}'s developer page</div>
                     {% for game, editform in gameforms %}<!-- TODO: Should this be in a spoiler-type hidden area that is expanded upon clicking "Add new game?" -->
                         <div class="gameinfo">
@@ -65,6 +68,20 @@
                         {% if user.userextension.isDeveloper %}
                             <div class="generic">
                                 <div class="description">Add a new game to Quagmire Zone Underground.</div>
+                                {% if errors|length > 0 %}
+                                    <div class="error">
+                                        {% for error, reason in errors.items %}
+                                            {% if error == "URL" %}
+                                                Invalid path {{ reason }}
+                                            {% else %}
+                                                Invalid {{ error }} {{ reason }}
+                                            {% endif %}
+                                            {% if not forloop.last %}
+                                                <br>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                                 <form method="POST" action="/developer/{{ user.username }}">
                                     {% csrf_token %}
                                     {{ form.as_p }}
