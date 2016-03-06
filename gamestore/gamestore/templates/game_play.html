@@ -40,6 +40,8 @@ $.ajaxSetup({
     }
 });
 function listener(event){
+    if(event.origin != {{game.gameSource}})
+        return;
     var type = event.data.messageType;
     if(type === "SCORE"){
         var scorestring = JSON.stringify(event.data.score);
@@ -57,6 +59,41 @@ function listener(event){
                 alert('Posting score failed miserably');
             },
         });
+    }
+    else if(type === "SAVE"){
+        var game_state = JSON.stringify(event.data.gameState);
+        $.ajax({
+            url: "{% url 'save_state' %}",
+            type: 'POST',
+            data: JSON.stringify({
+                'game_id': '{{game.URL}}',
+                'gameState': game_state,
+            }),
+            success: function(data){
+                alert('Game saved succesfully!');
+            },
+            failure: function(data){
+                alert('An error occured while saving the game');
+            },
+        });
+    }
+    else if(type === "LOAD_REQUEST"){
+        $.ajax({
+            url: "{% url 'load_request' %}",
+            type: 'POST',
+            data: JSON.stringify({
+                'game_id': '{{game.URL}}',
+            }),
+            success: function(data){
+                alert('Load request accepted!');
+            },
+            failure: function(data){
+                alert('An error occured with the load request');
+            },
+        });
+
+    
+        event.source.postMessage(, event.origin)
     }
 }
     window.addEventListener("message", listener, false);

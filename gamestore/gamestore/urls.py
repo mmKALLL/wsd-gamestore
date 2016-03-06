@@ -36,5 +36,7 @@ urlpatterns = [
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test),
     url(r'^post_score$', views.postScore, name='post_score'),
+    url(r'^save_state$', views.saveState, name='save_state'),
+    url(r'^load_request$', views.loadRequest, name='load_request'),
     url(r'^sameorigin$', views.sameOrigin)
 ]

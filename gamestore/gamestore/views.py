@@ -278,7 +278,8 @@ def test(request):
 	users = User.objects.all()
 	games = Game.objects.all()
 	highscores = Highscore.objects.all()
-	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores})
+	gamesaves = GameSave.objects.all()
+	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores, 'gamesaves': gamesaves})
 
 def postScore(request):
 	data = json.loads(request.body.decode('UTF-8'))
@@ -299,8 +300,38 @@ def postScore(request):
 	context = {'message': 'Score saved succesfully!'}
 	return JsonResponse(context)
 
-	
+def saveState(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	state = data['gameState']
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
 
+	save = GameSave.objects.filter(user=user, game=game)
+
+	if save:
+		save.data = state
+		save.save()
+	else:
+		save = GameSave(game=game, user=user, data=state)
+		save.save()
+	context = {'message': 'Game saved succesfully!'}
+	return JsonResponse(context)
+
+def loadRequest(request):
+	data = json.loads(request.body.decode('UTF-8'))
+	game_id = data['game_id']
+	game = get_object_or_404(Game, URL=game_id)
+	user = request.user
+
+	save = GameSave.objects.filter(user=user, game=game)
+
+	if save:
+		
+		return JsonResponse(context)
+	else:
+		
+	
 def sameOrigin(request):
     return render(request, 'sameorigin.html', {})
 
