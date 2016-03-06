@@ -306,41 +306,41 @@ def postScore(request):
 	return JsonResponse(context)
 
 def saveState(request):
-	data = json.loads(request.body.decode('UTF-8'))
-	game_id = data['game_id']
-	state = data['gameState']
-	game = get_object_or_404(Game, URL=game_id)
-	user = request.user
-
-	save = GameSave.objects.filter(user=user, game=game)
-
-	if save:
-		save.data = state
-		save.save()
-	else:
-		save = GameSave(game=game, user=user, data=state)
-		save.save()
-	context = {'message': 'Game saved succesfully!'}
-	return JsonResponse(context)
+    data = json.loads(request.body.decode('UTF-8'))
+    game_id = data['game_id']
+    state = data['gameState']
+    game = get_object_or_404(Game, URL=game_id)
+    user = request.user
+    
+    save = GameSave.objects.filter(user=user, game=game)
+    
+    if save:
+        save.data = state
+        save.save()
+    else:
+        save = GameSave(game=game, user=user, data=state)
+        save.save()
+    context = {'message': 'Game saved succesfully!'}
+    return JsonResponse(context)
 
 def loadRequest(request):
-	data = json.loads(request.body.decode('UTF-8'))
-	game_id = data['game_id']
-	game = get_object_or_404(Game, URL=game_id)
-	user = request.user
-
-	save = GameSave.objects.filter(user=user, game=game)
-
-	if save:
+    data = json.loads(request.body.decode('UTF-8'))
+    game_id = data['game_id']
+    game = get_object_or_404(Game, URL=game_id)
+    user = request.user
+    
+    save = GameSave.objects.filter(user=user, game=game)
+    
+    if save:
         response = {'messageType': 'LOAD', 'gameState': save.data}
-		context = {'response': json.dumps(response)}
-		return JsonResponse(context)
-	else:
+        context = {'response': json.dumps(response)}
+        return JsonResponse(context)
+    else:
         response = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
-		context = {'response': json.dumps(response)}
-		return JsonResponse(context)
-		
-	
+        context = {'response': json.dumps(response)}
+        return JsonResponse(context)
+        
+    
 def sameOrigin(request):
     return render(request, 'sameorigin.html', {})
 
