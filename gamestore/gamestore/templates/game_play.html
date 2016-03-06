@@ -40,8 +40,6 @@ $.ajaxSetup({
     }
 });
 function listener(event){
-    if(event.origin !== '{{game.gameSource}}')
-        return;
     var type = event.data.messageType;
     console.log(type)
     if(type === "SCORE"){
@@ -94,7 +92,7 @@ function listener(event){
         });
 
     
-        event.source.postMessage({{ response }}, event.origin)
+        event.source.postMessage("{{ response }}", event.origin)
     }
 }
     window.addEventListener("message", listener, false);
