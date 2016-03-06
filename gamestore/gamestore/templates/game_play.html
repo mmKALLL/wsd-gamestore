@@ -93,7 +93,7 @@ function listener(event){
         });
 
     
-        event.source.postMessage(, event.origin)
+        event.source.postMessage({{ response }}, event.origin)
     }
 }
     window.addEventListener("message", listener, false);

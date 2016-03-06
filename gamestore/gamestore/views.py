@@ -333,11 +333,11 @@ def loadRequest(request):
 
 	if save:
         response = {'messageType': 'LOAD', 'gameState': save.data}
-		context = {'response': response}
+		context = {'response': json.dumps(response)}
 		return JsonResponse(context)
 	else:
         response = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
-		context = {'response': response}
+		context = {'response': json.dumps(response)}
 		return JsonResponse(context)
 		
 	

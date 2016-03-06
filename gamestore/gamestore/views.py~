@@ -11,12 +11,16 @@ PAYMENT_SECRET_KEY = 'ed1c50ac3b75bd1aa70835c8c84007ed'
 
 
 def index(request):
-	games = Game.objects.filter(isPublic=True)
-	if len(games) is 0:
-		return render(request, 'front_page.html', {'games': []})
-	else:
-		games = sorted(games, key=lambda x: x.createDate, reverse=True)
-		return render(request, 'front_page.html', {'games': games[:4]})
+    games = Game.objects.filter(isPublic=True)
+    if request.user.is_authenticated(): # Retroactively create userextensions to external login users.
+        if not UserExtension.objects.filter(user=request.user):
+            userext = UserExtension(user=request.user, isDeveloper=False, isValidated=True)
+            userext.save()
+    if len(games) is 0:
+        return render(request, 'front_page.html', {'games': []})
+    else:
+        games = sorted(games, key=lambda x: x.createDate, reverse=True)
+        return render(request, 'front_page.html', {'games': games[:4]})
 
 
 def register(request):
@@ -186,9 +190,9 @@ def gameView(request, view_URL):
 			p_info.update({
 				'payment_id': pid,
 				'seller_id': 'quagmire',
-				'success_url': 'http://127.0.0.1:8000/game/' + game.URL, # TODO: Change to Heroku URL
-				'cancel_url': 'http://127.0.0.1:8000/game/' + game.URL,
-				'error_url': 'http://127.0.0.1:8000/game/' + game.URL,
+				'success_url': 'http://localhost:8000/game/' + game.URL, # TODO: Change to Heroku URL
+				'cancel_url': 'http://localhost:8000/game/' + game.URL,
+				'error_url': 'http://localhost:8000/game/' + game.URL,
 				'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
 				'amount': game.price,
 			})
@@ -250,12 +254,13 @@ def gameStatsAPIhandling(request, view_URL):
         players = User.objects.all()
         playerscores = []
         for player in players:
-            personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data.score)
+            personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data)
             if len(personalscores) >= 1:
                 playerscores.append(personalscores[0])
-        playerscores = sorted(playerscores, key=lambda x: x.data.score) # TODO: Might break on highscores
-
-        context.update({'scores': playerscores[:amount]})
+        playerscores = sorted(playerscores, key=lambda x: -x.data) # TODO: Might break on highscores
+        playerscores = playerscores[:amount]
+        playerscores[:] = map(lambda x: {'score': x.data, 'user': x.user.username, 'game': x.game.name}, playerscores)
+        context.update({'scores': json.dumps(playerscores)})
         return render(request, 'restful_stats.html', context)
     else:
         return HttpResponseBadRequest("Bad request to the API.")
@@ -327,10 +332,12 @@ def loadRequest(request):
 	save = GameSave.objects.filter(user=user, game=game)
 
 	if save:
-		context = {'messageType': 'LOAD', 'gameState': save.data}
+        response = {'messageType': 'LOAD', 'gameState': save.data}
+		context = {'response': response}
 		return JsonResponse(context)
 	else:
-		context = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
+        response = {'messageType': 'ERROR', 'info': 'Unable to load the game state.'}
+		context = {'response': response}
 		return JsonResponse(context)
 		
 	
