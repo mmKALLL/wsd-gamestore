@@ -40,9 +40,10 @@ $.ajaxSetup({
     }
 });
 function listener(event){
-    if(event.origin != {{game.gameSource}})
+    if(event.origin !== '{{game.gameSource}}')
         return;
     var type = event.data.messageType;
+    console.log(type)
     if(type === "SCORE"){
         var scorestring = JSON.stringify(event.data.score);
         $.ajax({
