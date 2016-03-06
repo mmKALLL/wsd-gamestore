@@ -88,17 +88,17 @@ def userPage(request, user_name):
 
 
 def developerInfoPage(request):
-	if request.method == 'POST':
-		if request.user.is_authenticated():
-			user = request.user
-			user.userextension.isDeveloper = True
-			user.save()
-			user.userextension.save()
-			return render(request, 'developerinfo.html', {})
-		else:
-			return render(request, 'auth_required.html', {'last_page': 'developerinfo'})
-	else:
-		return render(request, 'developerinfo.html', {})
+    if request.method == 'POST':
+        if request.user.is_authenticated():
+            user = request.user
+            user.userextension.isDeveloper = True
+            user.save()
+            user.userextension.save()
+            return render(request, 'developerinfo.html', {})
+        else:
+            return render(request, 'auth_required.html', {'last_page': 'developerinfo'})
+    else:
+        return render(request, 'developerinfo.html', {})
 
 
 def developerPage(request, user_name):
@@ -147,82 +147,82 @@ def developerPage(request, user_name):
 
 
 def gameView(request, view_URL):
-	user = request.user
-	game = get_object_or_404(Game, URL=view_URL)
-	purchased_now = False
-	owned = False
-	highscores = Highscore.objects.filter(game=game)
-	players = User.objects.all()
-	playerscores = []
-	for player in players:
-		personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data)
-		if len(personalscores) >= 1:
-			playerscores.append(personalscores[0])
+    user = request.user
+    game = get_object_or_404(Game, URL=view_URL)
+    purchased_now = False
+    owned = False
+    highscores = Highscore.objects.filter(game=game)
+    players = User.objects.all()
+    playerscores = []
+    for player in players:
+        personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data)
+        if len(personalscores) >= 1:
+            playerscores.append(personalscores[0])
 
-	pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
-	
-	# If game was just purchased...
-	if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
-		if request.GET.get('result', '') == 'success':
-			if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'):
-				purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
-				purchasedgame.save()
-				request.user.userextension.ownedGames.add(purchasedgame)
-				request.user.save()
-				request.user.userextension.save()
-				purchased_now = True
+    pid = md5(('user: ' + str(user.id) + ', game: ' + str(game.id)).encode('ascii')).hexdigest()
+    
+    # If game was just purchased...
+    if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
+        if request.GET.get('result', '') == 'success':
+            if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'):
+                purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
+                purchasedgame.save()
+                request.user.userextension.ownedGames.add(purchasedgame)
+                request.user.save()
+                request.user.userextension.save()
+                purchased_now = True
             else:
                 raise PermissionDenied # Only raised on malicious usage.
-	
-	# The page itself
-	p_info = {}
-	if user.is_authenticated():
-		userext = get_object_or_404(UserExtension, user=user)
-		gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
-		if gameOwned: # TODO: Does not respect payment status (!!!) However, these objects are not created on cancels.
-			owned = True
-		else:
-			p_info.update({
-				'payment_id': pid,
-				'seller_id': 'quagmire',
-				'success_url': 'http://localhost:8000/game/' + game.URL, # TODO: Change to Heroku URL
-				'cancel_url': 'http://localhost:8000/game/' + game.URL,
-				'error_url': 'http://localhost:8000/game/' + game.URL,
-				'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(),
-				'amount': game.price,
-			})
-	if game.isPublic or owned:
-		context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: -y.data), 'purchase_info': p_info}
-		return render(request, 'game.html', context)
-	else:
-		raise PermissionDenied
+    
+    # The page itself
+    p_info = {}
+    if user.is_authenticated():
+        userext = get_object_or_404(UserExtension, user=user)
+        gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
+        if gameOwned: # TODO: Does not respect payment status (!!!) However, these objects are not created on cancels.
+            owned = True
+        else:
+            p_info.update({
+                'payment_id': pid,
+                'seller_id': 'quagmire',
+                'success_url': 'http://localhost:8000/game/' + game.URL, # TODO: Change to Heroku URL
+                'cancel_url': 'http://localhost:8000/game/' + game.URL,
+                'error_url': 'http://localhost:8000/game/' + game.URL,
+                'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(),
+                'amount': game.price,
+            })
+    if game.isPublic or owned:
+        context = {'user': user, 'game': game, 'purchased_now': purchased_now, 'owned': owned, 'highscores': sorted(playerscores, key=lambda y: -y.data), 'purchase_info': p_info}
+        return render(request, 'game.html', context)
+    else:
+        raise PermissionDenied
 
 
 def gamePlayView(request, view_URL):
-	if request.user.is_authenticated():
-		game = get_object_or_404(Game, URL=view_URL)
-		userext = get_object_or_404(UserExtension, user=request.user)
-		gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
-		if gameOwned:
-			context = {'game': game}
-			return render(request, 'game_play.html', context)
-		else:
-			raise PermissionDenied
-	else:
-		return render(request, 'auth_required.html', {}) # TODO: set 'last_page' in context
+    if request.user.is_authenticated():
+        game = get_object_or_404(Game, URL=view_URL)
+        userext = get_object_or_404(UserExtension, user=request.user)
+        gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
+        if gameOwned:
+            context = {'game': game}
+            return render(request, 'game_play.html', context)
+        else:
+            raise PermissionDenied
+    else:
+        return render(request, 'auth_required.html', {}) # TODO: set 'last_page' in context
 
 
 # Unused view for deleting games.
 def gameDeleteView(request, viewURL):
-	if request.method == 'POST':
-		game = get_object_or_404(Game, URL=view_URL)
-		if game.developer == request.user:
-			game.delete()
-			return redirect('/developer/' + request.user.username)
-		else:
-			raise PermissionDenied
-	else:
-		raise PermissionDenied
+    if request.method == 'POST':
+        game = get_object_or_404(Game, URL=view_URL)
+        if game.developer == request.user:
+            game.delete()
+            return redirect('/developer/' + request.user.username)
+        else:
+            raise PermissionDenied
+    else:
+        raise PermissionDenied
 
 
 def gameEditView(request, view_URL):
@@ -264,45 +264,45 @@ def gameStatsAPIhandling(request, view_URL):
 
 
 def gameList(request):
-	user = request.user
-	games = Game.objects.filter(isPublic=True)
-	genres = []
-	for game in games:
-		if game.genre not in genres:
-			genres.append(game.genre)
-	if len(genres) is 0:
-		context = {'user': user, 'games': games, 'genres': genres}
-	else:
-		context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'genres': sorted(genres)}
-	return render(request, 'game_list.html', context)
+    user = request.user
+    games = Game.objects.filter(isPublic=True)
+    genres = []
+    for game in games:
+        if game.genre not in genres:
+            genres.append(game.genre)
+    if len(genres) is 0:
+        context = {'user': user, 'games': games, 'genres': genres}
+    else:
+        context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'genres': sorted(genres)}
+    return render(request, 'game_list.html', context)
 
 
 def test(request):
-	users = User.objects.all()
-	games = Game.objects.all()
-	highscores = Highscore.objects.all()
-	gamesaves = GameSave.objects.all()
-	return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores, 'gamesaves': gamesaves})
+    users = User.objects.all()
+    games = Game.objects.all()
+    highscores = Highscore.objects.all()
+    gamesaves = GameSave.objects.all()
+    return render(request, 'test.html', {'users': users, 'games': games, 'highscores': highscores, 'gamesaves': gamesaves})
 
 
 def postScore(request):
-	data = json.loads(request.body.decode('UTF-8'))
-	game_id = data['game_id']
-	score = int(data['score'])
-	game = get_object_or_404(Game, URL=game_id)
-	user = request.user
+    data = json.loads(request.body.decode('UTF-8'))
+    game_id = data['game_id']
+    score = int(data['score'])
+    game = get_object_or_404(Game, URL=game_id)
+    user = request.user
 
-	highscore = Highscore.objects.filter(user=user, game=game)
+    highscore = Highscore.objects.filter(user=user, game=game)
 
-	if len(highscore)>0:
-		if highscore[0].data < score:
-			highscore[0].data = score
-			highscore[0].save()
-	else:
-		highscore = Highscore(game=game, user=user, data=score)
-		highscore.save()
-	context = {'message': 'Score saved succesfully!'}
-	return JsonResponse(context)
+    if len(highscore)>0:
+        if highscore[0].data < score:
+            highscore[0].data = score
+            highscore[0].save()
+    else:
+        highscore = Highscore(game=game, user=user, data=score)
+        highscore.save()
+    context = {'message': 'Score saved succesfully!'}
+    return JsonResponse(context)
 
 
 def saveState(request):
