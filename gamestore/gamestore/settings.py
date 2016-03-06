@@ -25,7 +25,7 @@ SECRET_KEY = '*=e@20kz0ad@hu7d&&kzow%8*r=@cwyfiq_cf=dih0%4$7y7e+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['quagmirezone.herokuapp.com']
 
 
 # Application definition
