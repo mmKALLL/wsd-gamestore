@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,7 @@ SECRET_KEY = '*=e@20kz0ad@hu7d&&kzow%8*r=@cwyfiq_cf=dih0%4$7y7e+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['quagmirezone.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -82,6 +83,8 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+DATABASES['default'] = dj_database_url.config()
 
 
 # Password validation
@@ -196,4 +199,13 @@ SOCIAL_AUTH_PIPELINE = (
                         # Update the user record with any changed info from the auth service.
                         'social.pipeline.user.user_details',
                         )
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
 
