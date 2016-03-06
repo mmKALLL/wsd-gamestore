@@ -30,6 +30,17 @@ textarea {
 	color: #000000;
 }
 
+.google {
+	background-color: #FF4444;
+	color: #FFFFFF;
+	border: 1px solid #A0A0A0;
+}
+
+.google:hover {
+	background-color: #FFFFFF;
+	color: #000000;
+}
+
 .collapser {
 	margin-top: 6px;
 }

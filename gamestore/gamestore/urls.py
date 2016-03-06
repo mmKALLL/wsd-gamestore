@@ -36,5 +36,6 @@ urlpatterns = [
     url(r'^gamelist$', views.gameList),
     url(r'^test$', views.test),
     url(r'^post_score$', views.postScore, name='post_score'),
-    url(r'^sameorigin$', views.sameOrigin)
+    url(r'^sameorigin$', views.sameOrigin),
+    url("^soc/", include("social.apps.django_app.urls", namespace="social")),
 ]
