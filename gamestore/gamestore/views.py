@@ -84,7 +84,7 @@ def userPage(request, user_name):
         else:
             raise PermissionDenied
     else:
-        return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
+        return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: last_page is unused.
 
 
 def developerInfoPage(request):
@@ -143,7 +143,7 @@ def developerPage(request, user_name):
         else:
             raise PermissionDenied
     else:
-        return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context
+        return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: last_page is unused.
 
 
 def gameView(request, view_URL):
@@ -164,20 +164,22 @@ def gameView(request, view_URL):
 	# If game was just purchased...
 	if request.GET.get('pid', '') and request.GET.get('ref', '') and request.GET.get('result', '') and request.GET.get('checksum', ''):
 		if request.GET.get('result', '') == 'success':
-			if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'): # TODO: Raise PermissionDenied if hashes do not match
+			if md5("pid={}&ref={}&result={}&token={}".format(pid, request.GET.get('ref', ''), 'success', PAYMENT_SECRET_KEY).encode('ascii')).hexdigest() == request.GET.get('checksum', 'a'):
 				purchasedgame = GamesOwned(paymentState=PAYMENT_SUCCESS, game=game)
 				purchasedgame.save()
 				request.user.userextension.ownedGames.add(purchasedgame)
 				request.user.save()
 				request.user.userextension.save()
 				purchased_now = True
+            else:
+                raise PermissionDenied # Only raised on malicious usage.
 	
 	# The page itself
 	p_info = {}
 	if user.is_authenticated():
 		userext = get_object_or_404(UserExtension, user=user)
 		gameOwned = GamesOwned.objects.filter(game=game, userextension=userext)
-		if gameOwned: # TODO: Does not respect payment status (!!!)
+		if gameOwned: # TODO: Does not respect payment status (!!!) However, these objects are not created on cancels.
 			owned = True
 		else:
 			p_info.update({
@@ -186,7 +188,7 @@ def gameView(request, view_URL):
 				'success_url': 'http://localhost:8000/game/' + game.URL, # TODO: Change to Heroku URL
 				'cancel_url': 'http://localhost:8000/game/' + game.URL,
 				'error_url': 'http://localhost:8000/game/' + game.URL,
-				'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(), # TODO: TEST WITH FAILED PAYMENT BY SETTING 'dev' TO TRUE
+				'checksum': md5("pid={}&sid={}&amount={}&token={}".format(pid, 'quagmire', game.price, PAYMENT_SECRET_KEY).encode('ascii')).hexdigest(),
 				'amount': game.price,
 			})
 	if game.isPublic or owned:
@@ -207,7 +209,7 @@ def gamePlayView(request, view_URL):
 		else:
 			raise PermissionDenied
 	else:
-		return render(request, 'auth_required.html', {}) # TODO: 'last_page': 'game', 'game': game
+		return render(request, 'auth_required.html', {}) # TODO: set 'last_page' in context
 
 
 # Unused view for deleting games.
@@ -252,7 +254,7 @@ def gameStatsAPIhandling(request, view_URL):
             personalscores = sorted(highscores.filter(user=player), key=lambda x: x.data)
             if len(personalscores) >= 1:
                 playerscores.append(personalscores[0])
-        playerscores = sorted(playerscores, key=lambda x: -x.data) # TODO: Might break on highscores
+        playerscores = sorted(playerscores, key=lambda x: -x.data) # Highest score first.
         playerscores = playerscores[:amount]
         playerscores[:] = map(lambda x: {'score': x.data, 'user': x.user.username, 'game': x.game.name}, playerscores)
         context.update({'scores': json.dumps(playerscores)})

@@ -38,7 +38,7 @@
                     <div class="generic success">New game was successfully added!</div>
                 {% endif %}
                 <div class="generic name">{{ user.username }}'s developer page</div>
-                    {% for game, editform in gameforms %}<!-- TODO: Should this be in a spoiler-type hidden area that is expanded upon clicking "Add new game?" -->
+                    {% for game, editform in gameforms %}
                         <div class="gameinfo">
                             <div class="gameinfo-left">
                                 <a href="/game/{{ game.URL }}">{{ game.name }}</a><br><img class="resize" src="{{ game.image }}"><img class="resize image-secondary" src="{{ game.image2 }}">
@@ -46,14 +46,15 @@
                             <div class="gameinfo-right">
                                 {{ game.genre }}<br>Released: {{ game.createDate|date:'j M, Y' }}<br>Price: {{ game.price }} €<br><a class="btn submit collapser" data-toggle="collapse" data-target="#edit-{{ game.URL }}">Edit game</a>
                             </div>
-                            
-                            SOLD GAMES:
-                                {% for boughtgame in boughtgames %}
-                                    {% if boughtgame.game == game %}
-                                        <p> Time: {{boughtgame.createDate}} </p>
+                            Games sold:
+                            {% for boughtgame in boughtgames %}
+                                {% if boughtgame.game == game %}
+                                    {{ boughtgame.createDate }}
+                                    {% if not forloop.last %}
+                                        <br>
                                     {% endif %}
-                                {% endfor %}
-                    
+                                {% endif %}
+                            {% endfor %}
                             <div id="edit-{{ game.URL }}" class="edit collapse">
                                 <br>
                                 <form method="POST" action="/game/{{ game.URL }}/edit">
