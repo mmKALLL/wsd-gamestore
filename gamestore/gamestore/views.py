@@ -121,7 +121,7 @@ def developerPage(request, user_name):
 
 						return redirect('/developer/' + request.user.username)
 					else:
-						return HttpResponse(new_game_form.errors + ' is invalid.')
+						return HttpResponse(new_game_form.errors)
 					#	return redirect('/developerinfo') # TODO: Add some meaningful message to user.
 				else:
 					developer = get_object_or_404(User, pk=request.user.id)

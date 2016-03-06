@@ -14,12 +14,12 @@ var gameStateFailure = false;
 // Kaksi apufunktiota RGB-arvojen muuttamiseen värikoodeiksi.
 
 function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
 }
 
 function rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 /* Peli toimii yksinomaan hiirellä. Tämä funktio lisää pelille kuuntelijan, joka kutsuu ohjelman muita
@@ -30,7 +30,7 @@ function events () {
 	canvas.addEventListener("click", function (event) {
 		if (gameOn) {
 			x = event.offsetX;
-        	y = event.offsetY;
+			y = event.offsetY;
 			if (x > 1 && x < 602 && y > 1 && y < 602) {
 				x = Math.floor((x - 2) / 24);
 				y = Math.floor((y - 2) / 24);
@@ -59,6 +59,11 @@ function events () {
 						splash.play();
 					} else {
 						victory.play();
+						var msg = {
+							"messageType": "SCORE",
+							"score": parseFloat(11 - turn)
+						};
+						window.parent.postMessage(msg, "*");
 					}
 				}
 			} else if (x > 778 && x < 854 && y > 374 && y < 450 && !gameStateClear && !gameStateFailure) {
@@ -73,6 +78,11 @@ function events () {
 						splash.play();
 					} else {
 						victory.play();
+						var msg = {
+							"messageType": "SCORE",
+							"score": parseFloat(11 - turn)
+						};
+						window.parent.postMessage(msg, "*");
 					}
 				}
 			} else if (x > 653 && x < 858 && y > 526 && y < 581) {
