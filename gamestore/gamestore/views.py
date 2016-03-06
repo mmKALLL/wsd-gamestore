@@ -216,6 +216,7 @@ def gamePlayView(request, view_URL):
 		return render(request, 'auth_required.html', {}) # TODO: 'last_page': 'game', 'game': game
 
 
+# Unused view for deleting games.
 def gameDeleteView(request, viewURL):
 	if request.method == 'POST':
 		game = get_object_or_404(Game, URL=view_URL)

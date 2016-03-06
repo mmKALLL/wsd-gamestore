@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^user/([0-9a-zA-Z@\.+\-_]+)$', views.userPage),
     url(r'^developerinfo$', views.developerInfoPage),
     url(r'^developer/([0-9a-zA-Z@\.+\-_]+)$', views.developerPage),
-    url(r'^game/([0-9a-zA-Z~\.\-_]+)/delete$', views.gameDeleteView),
+#    url(r'^game/([0-9a-zA-Z~\.\-_]+)/delete$', views.gameDeleteView), # We have specified that games should not be deleted.
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/edit$', views.gameEditView),
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/play$', views.gamePlayView),
     url(r'^game/([0-9a-zA-Z~\.\-_]+)/stats$', views.gameStatsAPIhandling),
