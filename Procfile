@@ -1,1 +1,1 @@
-web: gunicorn gamestore.wsgi --log-file -
+web: gunicorn gamestore.wsgi:application --log-file -
