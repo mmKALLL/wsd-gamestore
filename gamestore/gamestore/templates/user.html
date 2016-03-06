@@ -50,9 +50,20 @@
                     {% endfor %}
                 {% endif %}
                 <div class="generic">
+                    {% if errors|length > 0 %}
+                        <div class="error">
+                            {% for error, reason in errors.items %}
+                                Invalid {{ error }} {{ reason }}
+                                {% if not forloop.last %}
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <form method="POST" action="/user/{{ user.username }}">
                         {% csrf_token %}
                         {{ form.as_p }}
+                        WARNING: Entering a different password than your current one will change it.<br><br>
                         <input class="btn submit" type="submit" value="Edit profile information" />
                     </form>
                 </div>

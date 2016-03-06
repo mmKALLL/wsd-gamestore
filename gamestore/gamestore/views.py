@@ -62,29 +62,29 @@ def userValidation(request, user_name):
 
 
 def userPage(request, user_name):
-	if request.user.is_authenticated():
-		if request.user.username == user_name:
-			if request.method == 'POST':
-				user_form = UserEditForm(data=request.POST, instance=request.user)
-				if user_form.is_valid():
-					user = user_form.save()
-					user.set_password(user.password)
-					user.save()
-					return redirect('/user/' + request.user.username)
-				else:
-					return HttpResponse(user_form.errors + ' is invalid.')
-			else:
-				user = get_object_or_404(User, pk=request.user.id)
-				userext = get_object_or_404(UserExtension, user=user)
-				gamesOwned = GamesOwned.objects.filter(userextension=userext)
-				games = [elem.game for elem in gamesOwned]
-				user_form = UserEditForm(instance=request.user)
-				context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'form': user_form}
-				return render(request, 'user.html', context)
-		else:
-			raise PermissionDenied
-	else:
-		return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
+    if request.user.is_authenticated():
+        if request.user.username == user_name:
+            errors = {}
+            if request.method == 'POST':
+                user_form = UserEditForm(data=request.POST, instance=request.user)
+                if user_form.is_valid():
+                    user = user_form.save()
+                    user.set_password(user.password)
+                    user.save()
+                    return redirect('/user/' + request.user.username)
+                else:
+                    errors.update(user_form.errors)
+            user = get_object_or_404(User, pk=request.user.id)
+            userext = get_object_or_404(UserExtension, user=user)
+            gamesOwned = GamesOwned.objects.filter(userextension=userext)
+            games = [elem.game for elem in gamesOwned]
+            user_form = UserEditForm(instance=request.user)
+            context = {'user': user, 'games': sorted(games, key=lambda x: x.name), 'form': user_form, 'errors': errors}
+            return render(request, 'user.html', context)
+        else:
+            raise PermissionDenied
+    else:
+        return render(request, 'auth_required.html', {'last_page': 'user'}) # TODO: change the context and html file name
 
 
 def developerInfoPage(request):
