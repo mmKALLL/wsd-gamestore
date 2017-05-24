@@ -5,9 +5,9 @@ Final report available at: https://docs.google.com/document/d/1rJaggiiJ_7w7EMb92
 
 ### 1. Team
 
-429788 Esa Koskinen
-429186 Atte Jaantila
-355496 Jussi Hirvonen
+Esa Koskinen
+Atte Jaantila
+Jussi Hirvonen
 
   
 ### 2. Goal
