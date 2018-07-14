@@ -1,7 +1,7 @@
 defusedxml==0.4.1
 dj-database-url==0.4.0
 Django==1.9
-gunicorn==19.4.5
+gunicorn==19.5.0
 oauthlib==1.0.3
 PyJWT==1.4.0
 python-social-auth==0.2.14
